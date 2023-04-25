@@ -1,0 +1,15 @@
+4/10/23 - Created the constructors for the pokemon. There may be an issue with the way I am calculating manhatten distance? Also I noticed that when I generate the moves for the pokemon, the move types do not correlate with that type of pokemon.
+4/11/23 - My issue with the moves just needed me to place a -1 when getting the index value for the move. I've created wild pokemon that will spawn in, a battle scene for them as well. I'm trying to generate pokemon for the trainers but I'm currently
+getting an error "poke327.cpp:883:24: error: invalid use of incomplete type ‘class PC’". Its weird because theres old parts of the code which is referencing player just fine. I'm not sure what exactly is going on.
+4/12/23 - Fixed the circular reference bug. I added NPC battles, fixed the manhatten distance problem as well. I had an issue where NPC pokemon would get some crazy values, it was because I was doing something along
+the lines of HP= blah blah blah + HP. HP doesn't have a value so I would get some crazy return values. Everything goes along with the PDF. I do have one issue though, its odd I wasn't having this in the previous assignment so some value must've changed. Once go through more than 1 different map, I get a floating point exception (core dump). I gotta find where this mysterious float is coming from.
+
+
+
+4/15/23 - Began to create the structure of battles
+4/16/23 - Continued making the wild Pokemon battles, I'm trying to make the system relatively similar to the original but 
+its definitely more work than I want to do
+4/17/23 - I've finished up the wild pokemon battles, the trainer battles will be pretty similar with some slight differences on how pokemon are chosen and how games are ended
+4/18/23 - Finished NPC trainer battles. I've noticed a slight bug that when you click space during the main interface it will automatically battle pokemon, looking for a fix now.
+
+4/21/23 - I've begun to add some houses, maybe I should make interiors? The idea is to have little towns here and there with gyms

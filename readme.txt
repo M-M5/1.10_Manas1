@@ -1,0 +1,5 @@
+For this assignment, I have implemented battling for both wild pokemon and trainer pokemon. I have put significantly more time than I should've trying to make the interface look nice.
+When you battle a pokemon, an interface will come up asking what you'd like to do, battle, get a new pokemon, use an item, or run. Apart from battling, you can catch pokemon too! 
+The difference in battling trainers vs wild pokemon are a little different, but much of the code is the same. The only difference is that I iterate through the NPC's party and the battle will only end if either
+all your pokemon have been defeated or all the NPC's pokemon have been defeated. The one bug I have noticed is that with some very odd sequence of inputs your pokemon may hit HP: 0 and can continue to battle. this
+occurance is relatively rare, so when battling please click only the desired buttons for the best experience.
