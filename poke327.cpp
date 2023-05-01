@@ -34,6 +34,25 @@ void crash()
     assert(false);
 }
 
+/////////////////////////////////////////////////////////////PROTOTYPES///////////////////////////////////////////////
+class Gym;
+class Map;
+class WorldMap;
+class Character;
+class PC;
+class NPC;
+class personalPokemon;
+struct GQnode;
+struct GodQueue;
+
+int calc_Cost(int terrain, int chartype);
+int findNextPos(NPC *character, Map *m, WorldMap *WM, PC *player);
+int generateCharacters(Map *m, WorldMap *WM, PC *player, int numTrainers);
+int enqueueAllChars(GodQueue *GQ, Map *m);
+int clearScreen();
+int clearScreen_top();
+int createPanel(int topRow, int bottomRow, int leftCol, int rightCol);
+
 // CONSTANTS
 const int MAX = 42069666;
 const int NO_DIRECTION = -1, NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
@@ -42,6 +61,7 @@ int NUMTRAINERS = 0;
 
 int w_row;
 int w_col;
+Gym *gyms[8];
 
 typedef enum GymType
 {
@@ -52,7 +72,8 @@ typedef enum GymType
     FUSHSIA_GYM,
     SAFFRON_GYM,
     CINNABAR_GYM,
-    VIRIDIAN_GYM
+    VIRIDIAN_GYM,
+    ELITEFOUR_GYM
 } GymType;
 
 typedef enum CharacterType
@@ -85,7 +106,15 @@ typedef enum TerrainType
     TT_WATER,
     TT_GATE,
 
-    TT_HOUSE
+    TT_PEWTER,
+    TT_CERULEAN,
+    TT_VERMILION,
+    TT_CELADON,
+    TT_FUSHSIA,
+    TT_SAFFRON,
+    TT_CINNABAR,
+    TT_VIRIDIAN,
+    TT_ELITEFOUR
 } TerrainType;
 
 // function that takes a characterType enum and returns the corresponding character
@@ -115,25 +144,6 @@ char CT_to_Char(int CT)
         return '!'; // this means there was an error!
     }
 }
-
-/////////////////////////////////////////////////////////////PROTOTYPES///////////////////////////////////////////////
-class Map;
-class WorldMap;
-class Character;
-class PC;
-class NPC;
-class personalPokemon;
-
-struct GQnode;
-struct GodQueue;
-
-int calc_Cost(int terrain, int chartype);
-int findNextPos(NPC *character, Map *m, WorldMap *WM, PC *player);
-int generateCharacters(Map *m, WorldMap *WM, PC *player, int numTrainers);
-int enqueueAllChars(GodQueue *GQ, Map *m);
-int clearScreen();
-int clearScreen_top();
-int createPanel(int topRow, int bottomRow, int leftCol, int rightCol);
 
 //////////////////////////////////////////////////////////////////////////////////GOD QUEUE//////////////////////////////////////////////////////
 struct GQnode
@@ -292,7 +302,6 @@ int GQdestroy(GodQueue *q)
 class WorldMap
 {
 public:
-    // Gym gyms[8];
     Map *mapGrid[401][401];
     int hiker_CM[21][80];
     int rival_CM[21][80];
@@ -313,7 +322,11 @@ public:
         GQinit(&(charQueue)); // initialize the character queue
 
         // Creation of gyms
-        // int pewterGymX =
+        // for (int i = 0; i < 9; i++)
+        // {
+        // gyms[i] = new Gym(i);
+        // Gym *newGym = new Gym(1);
+        // }
     }
 
     ~WorldMap()
@@ -397,6 +410,512 @@ public:
     }
 
     virtual ~Character() {}
+};
+
+class Gym
+{
+public:
+    int Ggrid[21][40];
+    Character *charGrid[21][40];
+    std::vector<NPC> leaders;
+    int w_row;
+    int w_col;
+    std::string badge;
+    int terrainType;
+
+    // Gym() : leaders(0), w_row(0), w_col(0), badge("None")
+    // {
+    // }
+
+    Gym(int gym)
+    {
+
+        switch (gym)
+        {
+        case (0):
+        {
+            terrainType = 13;
+            int randX, randY;
+            do
+            {
+                randX = rand() % (225 - 175) + 175;
+                randY = rand() % (225 - 175) + 175;
+            } while ((abs(randX - 200) + abs(200 - randY)) < 1 || (abs(randX - 200) + abs(200 - randY)) > 50);
+
+            w_row = randX;
+            w_col = randY;
+
+            std::ifstream file;
+            file.open("rockGym.txt");
+            std::string curLine;
+            for (int i = 0; i < 21; i++)
+            {
+                getline(file, curLine);
+                for (int j = 0; j < 40; j++)
+                {
+                    if (curLine[j] == '%')
+                    {
+                        Ggrid[i][j] = TT_BOULDER;
+                    }
+                    else if (curLine[j] == '.')
+                    {
+                        Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else
+                    {
+                        Ggrid[i][j] = TT_NO_TERRAIN;
+                    }
+                }
+            }
+            badge = "Boulder Badge";
+            // NPC *brock = new NPC(CT_LEADER, 6, "Brock", w_row, w_col);
+            // charGrid[brock->row][brock->col] = brock;
+            // leaders.push_back(*brock);
+            break;
+        }
+        case (1):
+        {
+            terrainType = 14;
+            int randX, randY;
+            do
+            {
+                randX = rand() % (250 - 200) + 200;
+                randY = rand() % (250 - 200) + 200;
+            } while ((abs(randX - 200) + abs(200 - randY)) < 51 || (abs(randX - 200) + abs(200 - randY)) > 100);
+
+            w_row = randX;
+            w_col = randY;
+
+            std::ifstream file;
+            file.open("rockGym.txt");
+            std::string curLine;
+            for (int i = 0; i < 21; i++)
+            {
+                getline(file, curLine);
+                for (int j = 0; j < 40; j++)
+                {
+                    if (curLine[j] == '%')
+                    {
+                        Ggrid[i][j] = TT_BOULDER;
+                    }
+                    else if (curLine[j] == '.')
+                    {
+                        Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else
+                    {
+                        Ggrid[i][j] = TT_NO_TERRAIN;
+                    }
+                }
+            }
+            badge = "Cascade Badge";
+            // NPC *misty = new NPC(CT_LEADER, 11, "Misty", w_row, w_col);
+            // charGrid[misty->row][misty->col] = misty;
+            // leaders.push_back(*misty);
+            break;
+        }
+        case (2):
+        {
+            terrainType = 15;
+            int randX, randY;
+            do
+            {
+                randX = rand() % (275 - 225) + 225;
+                randY = rand() % (275 - 225) + 225;
+            } while ((abs(randX - 200) + abs(200 - randY)) < 101 || (abs(randX - 200) + abs(200 - randY)) > 150);
+
+            w_row = randX;
+            w_col = randY;
+
+            std::ifstream file;
+            file.open("rockGym.txt");
+            std::string curLine;
+            for (int i = 0; i < 21; i++)
+            {
+                getline(file, curLine);
+                for (int j = 0; j < 40; j++)
+                {
+                    if (curLine[j] == '%')
+                    {
+                        Ggrid[i][j] = TT_BOULDER;
+                    }
+                    else if (curLine[j] == '.')
+                    {
+                        Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else
+                    {
+                        Ggrid[i][j] = TT_NO_TERRAIN;
+                    }
+                }
+            }
+            badge = "Thunder Badge";
+            // NPC *lt_Surge = new NPC(CT_LEADER, 13, "Lt. Surge", w_row, w_col);
+            // charGrid[lt_Surge->row][lt_Surge->col] = lt_Surge;
+            // leaders.push_back(*lt_Surge);
+            break;
+        }
+        case (3):
+        {
+            terrainType = 16;
+            int randX, randY;
+            do
+            {
+                randX = rand() % (300 - 275) + 275;
+                randY = rand() % (300 - 275) + 275;
+            } while ((abs(randX - 200) + abs(200 - randY)) < 151 || (abs(randX - 200) + abs(200 - randY)) > 200);
+
+            w_row = randX;
+            w_col = randY;
+
+            std::ifstream file;
+            file.open("rockGym.txt");
+            std::string curLine;
+            for (int i = 0; i < 21; i++)
+            {
+                getline(file, curLine);
+                for (int j = 0; j < 40; j++)
+                {
+                    if (curLine[j] == '%')
+                    {
+                        Ggrid[i][j] = TT_BOULDER;
+                    }
+                    else if (curLine[j] == '.')
+                    {
+                        Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else
+                    {
+                        Ggrid[i][j] = TT_NO_TERRAIN;
+                    }
+                }
+            }
+            badge = "Rainbow Badge";
+            // NPC *erika = new NPC(CT_LEADER, 12, "Erika", w_row, w_col);
+            // charGrid[erika->row][erika->col] = erika;
+            // leaders.push_back(*erika);
+            break;
+        }
+        case (4):
+        {
+            terrainType = 17;
+            int randX, randY;
+            do
+            {
+                randX = rand() % (325 - 300) + 300;
+                randY = rand() % (325 - 300) + 300;
+            } while ((abs(randX - 200) + abs(200 - randY)) < 201 || (abs(randX - 200) + abs(200 - randY)) > 250);
+
+            w_row = randX;
+            w_col = randY;
+
+            std::ifstream file;
+            file.open("rockGym.txt");
+            std::string curLine;
+            for (int i = 0; i < 21; i++)
+            {
+                getline(file, curLine);
+                for (int j = 0; j < 40; j++)
+                {
+                    if (curLine[j] == '%')
+                    {
+                        Ggrid[i][j] = TT_BOULDER;
+                    }
+                    else if (curLine[j] == '.')
+                    {
+                        Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else
+                    {
+                        Ggrid[i][j] = TT_NO_TERRAIN;
+                    }
+                }
+            }
+            badge = "Soul Badge";
+            // NPC *koga = new NPC(CT_LEADER, 4, "Koga", w_row, w_col);
+            // charGrid[koga->row][koga->col] = koga;
+            // leaders.push_back(*koga);
+            // NPC *janine = new NPC(CT_LEADER, 4, "Janine", w_row, w_col);
+            // charGrid[janine->row][janine->col] = janine;
+            // leaders.push_back(*janine);
+            break;
+        }
+        case (5):
+        {
+            terrainType = 18;
+            int randX, randY;
+            do
+            {
+                randX = rand() % (350 - 325) + 325;
+                randY = rand() % (350 - 325) + 325;
+            } while ((abs(randX - 200) + abs(200 - randY)) < 251 || (abs(randX - 200) + abs(200 - randY)) > 300);
+
+            w_row = randX;
+            w_col = randY;
+
+            std::ifstream file;
+            file.open("rockGym.txt");
+            std::string curLine;
+            for (int i = 0; i < 21; i++)
+            {
+                getline(file, curLine);
+                for (int j = 0; j < 40; j++)
+                {
+                    if (curLine[j] == '%')
+                    {
+                        Ggrid[i][j] = TT_BOULDER;
+                    }
+                    else if (curLine[j] == '.')
+                    {
+                        Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else
+                    {
+                        Ggrid[i][j] = TT_NO_TERRAIN;
+                    }
+                }
+            }
+            badge = "Marsh Badge";
+            // NPC *sabrina = new NPC(CT_LEADER, 14, "Sabrina", w_row, w_col);
+            // charGrid[sabrina->row][sabrina->col] = sabrina;
+            // leaders.push_back(*sabrina);
+            break;
+        }
+        case (6):
+        {
+            terrainType = 19;
+            int randX, randY;
+            do
+            {
+                randX = rand() % (375 - 350) + 350;
+                randY = rand() % (375 - 350) + 350;
+            } while ((abs(randX - 200) + abs(200 - randY)) < 301 || (abs(randX - 200) + abs(200 - randY)) > 350);
+
+            w_row = randX;
+            w_col = randY;
+
+            std::ifstream file;
+            file.open("rockGym.txt");
+            std::string curLine;
+            for (int i = 0; i < 21; i++)
+            {
+                getline(file, curLine);
+                for (int j = 0; j < 40; j++)
+                {
+                    if (curLine[j] == '%')
+                    {
+                        Ggrid[i][j] = TT_BOULDER;
+                    }
+                    else if (curLine[j] == '.')
+                    {
+                        Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else
+                    {
+                        Ggrid[i][j] = TT_NO_TERRAIN;
+                    }
+                }
+            }
+            badge = "Volcano Badge";
+            // NPC *blane = new NPC(CT_LEADER, 10, "blane", w_row, w_col);
+            // charGrid[blane->row][blane->col] = blane;
+            // leaders.push_back(*blane);
+            break;
+        }
+        case (7):
+        {
+            terrainType = 20;
+            int randX, randY;
+            do
+            {
+                randX = rand() % (400 - 375) + 375;
+                randY = rand() % (400 - 375) + 375;
+            } while ((abs(randX - 200) + abs(200 - randY)) < 350 || (abs(randX - 200) + abs(200 - randY)) > 400);
+
+            w_row = randX;
+            w_col = randY;
+
+            std::ifstream file;
+            file.open("rockGym.txt");
+            std::string curLine;
+            for (int i = 0; i < 21; i++)
+            {
+                getline(file, curLine);
+                for (int j = 0; j < 40; j++)
+                {
+                    if (curLine[j] == '%')
+                    {
+                        Ggrid[i][j] = TT_BOULDER;
+                    }
+                    else if (curLine[j] == '.')
+                    {
+                        Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else
+                    {
+                        Ggrid[i][j] = TT_NO_TERRAIN;
+                    }
+                }
+            }
+            badge = "Earth Badge";
+            // NPC *giovanni = new NPC(CT_LEADER, 5, "Giovanni", w_row, w_col);
+            // charGrid[giovanni->row][giovanni->col] = giovanni;
+            // leaders.push_back(*giovanni);
+            // NPC *blue = new NPC(CT_LEADER, rand() % 19, "Blue", w_row, w_col);
+            // charGrid[blue->row][blue->col] = blue;
+            // leaders.push_back(*blue);
+            break;
+        }
+        case (8):
+        {
+            terrainType = 21;
+            int randX, randY;
+            if (rand() % 2 == 0 ? randX = 0 : randX = 399)
+                ;
+            if (rand() % 2 == 0 ? randY = 0 : randY = 399)
+                ;
+            w_row = randX;
+            w_col = randY;
+
+            std::ifstream file;
+            file.open("rockGym.txt");
+            std::string curLine;
+            for (int i = 0; i < 21; i++)
+            {
+                getline(file, curLine);
+                for (int j = 0; j < 40; j++)
+                {
+                    if (curLine[j] == '%')
+                    {
+                        Ggrid[i][j] = TT_BOULDER;
+                    }
+                    else if (curLine[j] == '.')
+                    {
+                        Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else
+                    {
+                        Ggrid[i][j] = TT_NO_TERRAIN;
+                    }
+                }
+            }
+
+            badge = "Champion Badge";
+            // NPC *lorelai = new NPC(CT_LEADER, 15, "Lorelai", w_row, w_col);
+            // charGrid[lorelai->row][lorelai->col] = lorelai;
+            // leaders.push_back(*lorelai);
+            // NPC *bruno = new NPC(CT_LEADER, 2, "Bruno", w_row, w_col);
+            // charGrid[bruno->row][bruno->col] = bruno;
+            // leaders.push_back(*bruno);
+            // NPC *agatha = new NPC(CT_LEADER, 8, "Agatha", w_row, w_col);
+            // charGrid[agatha->row][agatha->col] = agatha;
+            // leaders.push_back(*agatha);
+        }
+        }
+    }
+
+    int printGym()
+    {
+        mvprintw(23, 0, "Goes in");
+        for (int i = 0; i < 21; i++)
+        {
+            for (int j = 0; j < 40; j++)
+            {
+                if (charGrid[i][j] != NULL)
+                { // if there is a character at the given spot, print the character
+                    int curChar = charGrid[i][j]->type;
+                    attron(COLOR_PAIR(COLOR_RED));
+                    if (curChar < 0 || curChar >= CT_OTHER)
+                    {
+                        mvprintw(0, 0, "ERROR: invalid character type at row:%d col:%d)", i, j);
+                        break;
+                    }
+                    else
+                    {
+                        if (curChar == CT_PLAYER || curChar == CT_LEADER)
+                        {
+                            attron(A_BOLD);
+                            mvprintw(i + 1, j, "%c", CT_to_Char(curChar));
+                            attroff(A_BOLD);
+                        }
+                        else
+                        {
+                            mvprintw(i + 1, j, "%c", CT_to_Char(curChar));
+                        }
+                    }
+                    attroff(COLOR_PAIR(COLOR_RED));
+                }
+                else
+                { // else print the terrain
+                    int curTerrain = Ggrid[i][j];
+                    switch (curTerrain)
+                    {
+                    // case TT_HOUSE:
+                    //     attron(COLOR_PAIR(COLOR_WHITE));
+                    //     // attron(A_BOLD);
+                    //     // attron(A_BLINK);
+                    //     mvprintw(i + 1, j, "H");
+                    //     // attroff(A_BLINK);
+                    //     // attroff(A_BOLD);
+                    //     attroff(COLOR_PAIR(COLOR_WHITE));
+                    //     break;
+                    case TT_PCENTER:
+                        attron(COLOR_PAIR(COLOR_MAGENTA));
+                        mvprintw(i + 1, j, "C");
+                        attroff(COLOR_PAIR(COLOR_MAGENTA));
+                        break;
+                    case TT_PMART:
+                        attron(COLOR_PAIR(COLOR_MAGENTA));
+                        mvprintw(i + 1, j, "P");
+                        attroff(COLOR_PAIR(COLOR_MAGENTA));
+                        break;
+                    case TT_SGRASS:
+                        attron(COLOR_PAIR(COLOR_GREEN));
+                        mvprintw(i + 1, j, ".");
+                        attroff(COLOR_PAIR(COLOR_GREEN));
+                        break;
+                    case TT_TGRASS:
+                        attron(A_BOLD);
+                        attron(COLOR_PAIR(COLOR_GREEN));
+                        mvprintw(i + 1, j, ":");
+                        attroff(COLOR_PAIR(COLOR_GREEN));
+                        attroff(A_BOLD);
+                        break;
+                    case TT_WATER:
+                        attron(COLOR_PAIR(COLOR_BLUE));
+                        mvprintw(i + 1, j, "~");
+                        attroff(COLOR_PAIR(COLOR_BLUE));
+                        break;
+                    case TT_PATH: // paths are '#' so this continues
+                    case TT_GATE: // gates are '#' so this continues
+                    case TT_BRIDGE:
+                        attron(COLOR_PAIR(COLOR_YELLOW));
+                        mvprintw(i + 1, j, "#");
+                        attroff(COLOR_PAIR(COLOR_YELLOW));
+                        break;
+                    case TT_TREE: // trees are '^' so this continues
+                    case TT_FOREST:
+                        attron(COLOR_PAIR(COLOR_GREEN));
+                        mvprintw(i + 1, j, "^");
+                        attroff(COLOR_PAIR(COLOR_GREEN));
+                        break;
+                    case TT_BOULDER: // boulders are '%' so this continues
+                    case TT_MOUNTAIN:
+                        mvprintw(i + 1, j, "%%");
+                        break;
+                    case TT_NO_TERRAIN:
+                        mvprintw(i + 1, j, "0");
+                        break;
+                    default:
+                        mvprintw(0, 0, "ERROR: invalid terrain type");
+                        break;
+                    }
+                }
+            }
+        }
+        refresh();
+        return 0;
+    };
 };
 
 class Map
@@ -669,40 +1188,74 @@ public:
         int distance = abs(globalRow - 200) + abs(globalCol - 200); // Manhattan distance from center of board
         int randSpawnNum = rand() % 400;                            // generates a random number from 0 to 399
 
-        // if (randSpawnNum >= distance)
+        if (gyms[0]->w_row == w_row && gyms[0]->w_col == w_col)
+        {
+            mvprintw(25, 0, "ATTEMTPS TO FIND LOCATION ");
+            while (1)
+            {
+                randRow = rand() % 14 + 3;
+                randCol = rand() % 73 + 3;
+                int terrain = gyms[0]->terrainType;
+
+                // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-right of path)
+                if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol + 1] != TT_PATH && Tgrid[randRow][randCol + 2] != TT_PATH && Tgrid[randRow - 1][randCol + 1] != TT_PATH && Tgrid[randRow - 1][randCol + 2] != TT_PATH &&
+                    Tgrid[randRow][randCol + 1] != TT_BRIDGE && Tgrid[randRow][randCol + 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 2] != TT_BRIDGE)
+                {
+                    Tgrid[randRow][randCol + 1] = terrain;
+                    Tgrid[randRow][randCol + 2] = terrain;
+                    Tgrid[randRow - 1][randCol + 1] = terrain;
+                    Tgrid[randRow - 1][randCol + 2] = terrain;
+                    break;
+                }
+
+                // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-left of path)
+                if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol - 1] != TT_PATH && Tgrid[randRow][randCol - 2] != TT_PATH && Tgrid[randRow - 1][randCol - 1] != TT_PATH && Tgrid[randRow - 1][randCol - 2] != TT_PATH &&
+                    Tgrid[randRow][randCol - 1] != TT_BRIDGE && Tgrid[randRow][randCol - 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 2] != TT_BRIDGE)
+                {
+
+                    Tgrid[randRow][randCol - 1] = terrain;
+                    Tgrid[randRow][randCol - 2] = terrain;
+                    Tgrid[randRow - 1][randCol - 1] = terrain;
+                    Tgrid[randRow - 1][randCol - 2] = terrain;
+                    break;
+                }
+            }
+        }
+
+        // for (int i = 0; i < 9; i++)
         // {
-
-        //     for (int i = 0; i < 4; i++)
+        //     if (gyms[i]->w_row == w_row && gyms[i]->w_col == w_col)
         //     {
-        //     // TO PLACE THE HOUSES
-        //     while (1)
-        //     {
-        //         randRow = rand() % 14 + 3;
-        //         randCol = rand() % 73 + 3;
-
-        //         // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-right of path)
-        //         if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol + 1] != TT_PATH && Tgrid[randRow][randCol + 2] != TT_PATH && Tgrid[randRow - 1][randCol + 1] != TT_PATH && Tgrid[randRow - 1][randCol + 2] != TT_PATH &&
-        //             Tgrid[randRow][randCol + 1] != TT_BRIDGE && Tgrid[randRow][randCol + 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 2] != TT_BRIDGE)
+        //         while (1)
         //         {
-        //             Tgrid[randRow][randCol + 1] = TT_HOUSE;
-        //             Tgrid[randRow][randCol + 2] = TT_HOUSE;
-        //             Tgrid[randRow - 1][randCol + 1] = TT_HOUSE;
-        //             Tgrid[randRow - 1][randCol + 2] = TT_HOUSE;
-        //             break;
-        //         }
+        //             randRow = rand() % 14 + 3;
+        //             randCol = rand() % 73 + 3;
+        //             int terrain = gyms[i]->terrainType;
 
-        //         // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-left of path)
-        //         if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol - 1] != TT_PATH && Tgrid[randRow][randCol - 2] != TT_PATH && Tgrid[randRow - 1][randCol - 1] != TT_PATH && Tgrid[randRow - 1][randCol - 2] != TT_PATH &&
-        //             Tgrid[randRow][randCol - 1] != TT_BRIDGE && Tgrid[randRow][randCol - 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 2] != TT_BRIDGE)
-        //         {
+        //             // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-right of path)
+        //             if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol + 1] != TT_PATH && Tgrid[randRow][randCol + 2] != TT_PATH && Tgrid[randRow - 1][randCol + 1] != TT_PATH && Tgrid[randRow - 1][randCol + 2] != TT_PATH &&
+        //                 Tgrid[randRow][randCol + 1] != TT_BRIDGE && Tgrid[randRow][randCol + 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 2] != TT_BRIDGE)
+        //             {
+        //                 Tgrid[randRow][randCol + 1] = terrain;
+        //                 Tgrid[randRow][randCol + 2] = terrain;
+        //                 Tgrid[randRow - 1][randCol + 1] = terrain;
+        //                 Tgrid[randRow - 1][randCol + 2] = terrain;
+        //                 break;
+        //             }
 
-        //             Tgrid[randRow][randCol - 1] = TT_HOUSE;
-        //             Tgrid[randRow][randCol - 2] = TT_HOUSE;
-        //             Tgrid[randRow - 1][randCol - 1] = TT_HOUSE;
-        //             Tgrid[randRow - 1][randCol - 2] = TT_HOUSE;
-        //             break;
+        //             // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-left of path)
+        //             if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol - 1] != TT_PATH && Tgrid[randRow][randCol - 2] != TT_PATH && Tgrid[randRow - 1][randCol - 1] != TT_PATH && Tgrid[randRow - 1][randCol - 2] != TT_PATH &&
+        //                 Tgrid[randRow][randCol - 1] != TT_BRIDGE && Tgrid[randRow][randCol - 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 2] != TT_BRIDGE)
+        //             {
+
+        //                 Tgrid[randRow][randCol - 1] = terrain;
+        //                 Tgrid[randRow][randCol - 2] = terrain;
+        //                 Tgrid[randRow - 1][randCol - 1] = terrain;
+        //                 Tgrid[randRow - 1][randCol - 2] = terrain;
+        //                 break;
+        //             }
         //         }
-        //     }
+        //         break;
         //     }
         // }
 
@@ -839,13 +1392,85 @@ public:
                     int curTerrain = Tgrid[i][j];
                     switch (curTerrain)
                     {
-                    case TT_HOUSE:
+                    case TT_PEWTER:
                         attron(COLOR_PAIR(COLOR_WHITE));
-                        // attron(A_BOLD);
-                        // attron(A_BLINK);
-                        mvprintw(i + 1, j, "H");
-                        // attroff(A_BLINK);
-                        // attroff(A_BOLD);
+                        attron(A_BOLD);
+                        attron(A_BLINK);
+                        mvprintw(i + 1, j, "P");
+                        attroff(A_BLINK);
+                        attroff(A_BOLD);
+                        attroff(COLOR_PAIR(COLOR_WHITE));
+                        break;
+                    case TT_CERULEAN:
+                        attron(COLOR_PAIR(COLOR_WHITE));
+                        attron(A_BOLD);
+                        attron(A_BLINK);
+                        mvprintw(i + 1, j, "C");
+                        attroff(A_BLINK);
+                        attroff(A_BOLD);
+                        attroff(COLOR_PAIR(COLOR_WHITE));
+                        break;
+                    case TT_VERMILION:
+                        attron(COLOR_PAIR(COLOR_WHITE));
+                        attron(A_BOLD);
+                        attron(A_BLINK);
+                        mvprintw(i + 1, j, "V");
+                        attroff(A_BLINK);
+                        attroff(A_BOLD);
+                        attroff(COLOR_PAIR(COLOR_WHITE));
+                        break;
+                    case TT_CELADON:
+                        attron(COLOR_PAIR(COLOR_WHITE));
+                        attron(A_BOLD);
+                        attron(A_BLINK);
+                        mvprintw(i + 1, j, "C");
+                        attroff(A_BLINK);
+                        attroff(A_BOLD);
+                        attroff(COLOR_PAIR(COLOR_WHITE));
+                        break;
+                    case TT_FUSHSIA:
+                        attron(COLOR_PAIR(COLOR_WHITE));
+                        attron(A_BOLD);
+                        attron(A_BLINK);
+                        mvprintw(i + 1, j, "F");
+                        attroff(A_BLINK);
+                        attroff(A_BOLD);
+                        attroff(COLOR_PAIR(COLOR_WHITE));
+                        break;
+                    case TT_SAFFRON:
+                        attron(COLOR_PAIR(COLOR_WHITE));
+                        attron(A_BOLD);
+                        attron(A_BLINK);
+                        mvprintw(i + 1, j, "S");
+                        attroff(A_BLINK);
+                        attroff(A_BOLD);
+                        attroff(COLOR_PAIR(COLOR_WHITE));
+                        break;
+                    case TT_CINNABAR:
+                        attron(COLOR_PAIR(COLOR_WHITE));
+                        attron(A_BOLD);
+                        attron(A_BLINK);
+                        mvprintw(i + 1, j, "C");
+                        attroff(A_BLINK);
+                        attroff(A_BOLD);
+                        attroff(COLOR_PAIR(COLOR_WHITE));
+                        break;
+                    case TT_VIRIDIAN:
+                        attron(COLOR_PAIR(COLOR_WHITE));
+                        attron(A_BOLD);
+                        attron(A_BLINK);
+                        mvprintw(i + 1, j, "V");
+                        attroff(A_BLINK);
+                        attroff(A_BOLD);
+                        attroff(COLOR_PAIR(COLOR_WHITE));
+                        break;
+                    case TT_ELITEFOUR:
+                        attron(COLOR_PAIR(COLOR_WHITE));
+                        attron(A_BOLD);
+                        attron(A_BLINK);
+                        mvprintw(i + 1, j, "E");
+                        attroff(A_BLINK);
+                        attroff(A_BOLD);
                         attroff(COLOR_PAIR(COLOR_WHITE));
                         break;
                     case TT_PCENTER:
@@ -1360,7 +1985,10 @@ class personalPokemon
 {
 public:
     std::string identifier;
+
     int level;
+    int totalExp;
+
     int id;
     int species_id;
 
@@ -1404,6 +2032,7 @@ public:
         identifier = pokemonVector[index].identifier;
         base_experience = pokemonVector[index].base_experience;
         level = 1;
+        totalExp = level ^ 3;
 
         // Generates a single move for the pokemon
         std::vector<Pokemon_moves> pokeMovesTemp;
@@ -1535,6 +2164,7 @@ public:
         mvprintw(26, 0, "YO YO YO %d", MD);
         level = MD <= 200 ? (rand() % ((MD / 2) - 1)) + 1 : (rand() % (100 - ((MD - 200) / 2))) + ((MD - 200) / 2);
 
+        totalExp = level ^ 3;
         // Generate Moves
         std::vector<Pokemon_moves> pokeMovesTemp;
         bool breakWhileLoop = false;
@@ -1655,6 +2285,7 @@ public:
         mvprintw(26, 0, "YO YO YO %d", MD);
         level = MD <= 200 ? (rand() % ((MD / 2) - 1)) + 1 : (rand() % (100 - ((MD - 200) / 2))) + ((MD - 200) / 2);
 
+        totalExp = level ^ 3;
         // Generate Moves
         std::vector<Pokemon_moves> pokeMovesTemp;
         bool breakWhileLoop = false;
@@ -1752,6 +2383,27 @@ public:
 
         // destructor
     }
+
+    int gainExp(personalPokemon opponent, bool wild)
+    {
+        float ownershipType = wild ? 1 : 1.5;
+        float baseOppExp = (float)opponent.base_experience;
+        float lvlOpp = (float)opponent.level;
+
+        int exp = floor(((baseOppExp * lvlOpp) / 7) * ownershipType);
+
+        totalExp += exp;
+        level = std::cbrt(totalExp);
+
+        max_HP = HP = floor((((pokeStatsTemp[0].base_stat + (rand() % 15)) * 2) * level) / 100) + level + 10;
+        attack = floor(((pokeStatsTemp[1].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
+        defense = floor(((pokeStatsTemp[2].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
+        special_attack = floor(((pokeStatsTemp[3].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
+        special_defense = floor(((pokeStatsTemp[4].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
+        speed = floor(((pokeStatsTemp[5].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
+
+        return exp;
+    };
 };
 
 class items
@@ -2039,6 +2691,7 @@ public:
     int isDefeated;
     std::string name;
 
+    // : name(leaderName), isDefeated(0), row(2), col(rand() % 38 + 1), direction(NO_DIRECTION),
     NPC(int NPCtype, int type_id, std::string leaderName, int w_row, int w_col)
     {
         name = leaderName;
@@ -2170,503 +2823,6 @@ public:
     }
 
     ~NPC() {}
-};
-
-class Gym
-{
-public:
-    int Ggrid[21][40];
-    Character *charGrid[21][40];
-    std::vector<NPC> leaders;
-    int w_row;
-    int w_col;
-    std::string badge;
-
-    // Gym() : leaders(0), location{0, 0}, badge("None")
-    // {
-    // }
-
-    Gym(int gym)
-    {
-        switch (gym)
-        {
-        case (0):
-        {
-            int randX, randY;
-            do
-            {
-                randX = rand() % (225 - 175) + 175;
-                randY = rand() % (225 - 175) + 175;
-            } while ((abs(randX - 200) + abs(200 - randY)) < 1 || (abs(randX - 200) + abs(200 - randY)) > 50);
-
-            w_row = randX;
-            w_col = randY;
-
-            std::ifstream file;
-            file.open("rockGym.txt");
-            std::string curLine;
-            for (int i = 0; i < 21; i++)
-            {
-                getline(file, curLine);
-                for (int j = 0; j < 40; j++)
-                {
-                    if (curLine[j] == '%')
-                    {
-                        Ggrid[i][j] = TT_BOULDER;
-                    }
-                    else if (curLine[j] == '.')
-                    {
-                        Ggrid[i][j] = TT_SGRASS;
-                    }
-                    // else
-                    // {
-                    //     std::cout << 'Error at terrain gen' << std::endl;
-                    // }
-                }
-            }
-            badge = "Boulder Badge";
-            NPC *brock = new NPC(CT_LEADER, 6, "Brock", w_row, w_col);
-            charGrid[brock->row][brock->col] = brock;
-            leaders.push_back(*brock);
-        }
-        case (1):
-        {
-            int randX, randY;
-            do
-            {
-                randX = rand() % (250 - 200) + 200;
-                randY = rand() % (250 - 200) + 200;
-            } while ((abs(randX - 200) + abs(200 - randY)) < 51 || (abs(randX - 200) + abs(200 - randY)) > 100);
-
-            w_row = randX;
-            w_col = randY;
-
-            std::ifstream file;
-            file.open("rockGym.txt");
-            std::string curLine;
-            for (int i = 0; i < 21; i++)
-            {
-                getline(file, curLine);
-                for (int j = 0; j < 40; j++)
-                {
-                    if (curLine[j] == '%')
-                    {
-                        Ggrid[i][j] = TT_BOULDER;
-                    }
-                    else if (curLine[j] == '.')
-                    {
-                        Ggrid[i][j] = TT_SGRASS;
-                    }
-                }
-            }
-            badge = "Cascade Gym";
-            NPC *misty = new NPC(CT_LEADER, 11, "Misty", w_row, w_col);
-            charGrid[misty->row][misty->col] = misty;
-            leaders.push_back(*misty);
-            break;
-        }
-        case (2):
-        {
-            int randX, randY;
-            do
-            {
-                randX = rand() % (275 - 225) + 225;
-                randY = rand() % (275 - 225) + 225;
-            } while ((abs(randX - 200) + abs(200 - randY)) < 101 || (abs(randX - 200) + abs(200 - randY)) > 150);
-
-            w_row = randX;
-            w_col = randY;
-
-            std::ifstream file;
-            file.open("rockGym.txt");
-            std::string curLine;
-            for (int i = 0; i < 21; i++)
-            {
-                getline(file, curLine);
-                for (int j = 0; j < 40; j++)
-                {
-                    if (curLine[j] == '%')
-                    {
-                        Ggrid[i][j] = TT_BOULDER;
-                    }
-                    else if (curLine[j] == '.')
-                    {
-                        Ggrid[i][j] = TT_SGRASS;
-                    }
-                    // else
-                    // {
-                    //     std::cout << 'Error at terrain gen' << std::endl;
-                    // }
-                }
-            }
-            badge = "Thunder Badge";
-            NPC *lt_Surge = new NPC(CT_LEADER, 13, "Lt. Surge", w_row, w_col);
-            charGrid[lt_Surge->row][lt_Surge->col] = lt_Surge;
-            leaders.push_back(*lt_Surge);
-            break;
-        }
-        case (3):
-        {
-            int randX, randY;
-            do
-            {
-                randX = rand() % (300 - 275) + 275;
-                randY = rand() % (300 - 275) + 275;
-            } while ((abs(randX - 200) + abs(200 - randY)) < 151 || (abs(randX - 200) + abs(200 - randY)) > 200);
-
-            w_row = randX;
-            w_col = randY;
-
-            std::ifstream file;
-            file.open("rockGym.txt");
-            std::string curLine;
-            for (int i = 0; i < 21; i++)
-            {
-                getline(file, curLine);
-                for (int j = 0; j < 40; j++)
-                {
-                    if (curLine[j] == '%')
-                    {
-                        Ggrid[i][j] = TT_BOULDER;
-                    }
-                    else if (curLine[j] == '.')
-                    {
-                        Ggrid[i][j] = TT_SGRASS;
-                    }
-                    // else
-                    // {
-                    //     std::cout << 'Error at terrain gen' << std::endl;
-                    // }
-                }
-            }
-            badge = "Rainbow Badge";
-            NPC *erika = new NPC(CT_LEADER, 12, "Erika", w_row, w_col);
-            charGrid[erika->row][erika->col] = erika;
-            leaders.push_back(*erika);
-            break;
-        }
-        case (4):
-        {
-            int randX, randY;
-            do
-            {
-                randX = rand() % (325 - 300) + 300;
-                randY = rand() % (325 - 300) + 300;
-            } while ((abs(randX - 200) + abs(200 - randY)) < 201 || (abs(randX - 200) + abs(200 - randY)) > 250);
-
-            w_row = randX;
-            w_col = randY;
-
-            std::ifstream file;
-            file.open("rockGym.txt");
-            std::string curLine;
-            for (int i = 0; i < 21; i++)
-            {
-                getline(file, curLine);
-                for (int j = 0; j < 40; j++)
-                {
-                    if (curLine[j] == '%')
-                    {
-                        Ggrid[i][j] = TT_BOULDER;
-                    }
-                    else if (curLine[j] == '.')
-                    {
-                        Ggrid[i][j] = TT_SGRASS;
-                    }
-                    // else
-                    // {
-                    //     std::cout << 'Error at terrain gen' << std::endl;
-                    // }
-                }
-            }
-            badge = "Soul Badge";
-            NPC *koga = new NPC(CT_LEADER, 4, "Koga", w_row, w_col);
-            charGrid[koga->row][koga->col] = koga;
-            leaders.push_back(*koga);
-            NPC *janine = new NPC(CT_LEADER, 4, "Janine", w_row, w_col);
-            charGrid[janine->row][janine->col] = janine;
-            leaders.push_back(*janine);
-            break;
-        }
-        case (5):
-        {
-            int randX, randY;
-            do
-            {
-                randX = rand() % (350 - 325) + 325;
-                randY = rand() % (350 - 325) + 325;
-            } while ((abs(randX - 200) + abs(200 - randY)) < 251 || (abs(randX - 200) + abs(200 - randY)) > 300);
-
-            w_row = randX;
-            w_col = randY;
-
-            std::ifstream file;
-            file.open("rockGym.txt");
-            std::string curLine;
-            for (int i = 0; i < 21; i++)
-            {
-                getline(file, curLine);
-                for (int j = 0; j < 40; j++)
-                {
-                    if (curLine[j] == '%')
-                    {
-                        Ggrid[i][j] = TT_BOULDER;
-                    }
-                    else if (curLine[j] == '.')
-                    {
-                        Ggrid[i][j] = TT_SGRASS;
-                    }
-                    // else
-                    // {
-                    //     std::cout << 'Error at terrain gen' << std::endl;
-                    // }
-                }
-            }
-            badge = "Marsh Badge";
-            NPC *sabrina = new NPC(CT_LEADER, 14, "Sabrina", w_row, w_col);
-            charGrid[sabrina->row][sabrina->col] = sabrina;
-            leaders.push_back(*sabrina);
-            break;
-        }
-        case (6):
-        {
-            int randX, randY;
-            do
-            {
-                randX = rand() % (375 - 350) + 350;
-                randY = rand() % (375 - 350) + 350;
-            } while ((abs(randX - 200) + abs(200 - randY)) < 301 || (abs(randX - 200) + abs(200 - randY)) > 350);
-
-            w_row = randX;
-            w_col = randY;
-
-            std::ifstream file;
-            file.open("rockGym.txt");
-            std::string curLine;
-            for (int i = 0; i < 21; i++)
-            {
-                getline(file, curLine);
-                for (int j = 0; j < 40; j++)
-                {
-                    if (curLine[j] == '%')
-                    {
-                        Ggrid[i][j] = TT_BOULDER;
-                    }
-                    else if (curLine[j] == '.')
-                    {
-                        Ggrid[i][j] = TT_SGRASS;
-                    }
-                    // else
-                    // {
-                    //     std::cout << 'Error at terrain gen' << std::endl;
-                    // }
-                }
-            }
-            badge = "Volcano Badge";
-            NPC *blane = new NPC(CT_LEADER, 10, "blane", w_row, w_col);
-            charGrid[blane->row][blane->col] = blane;
-            leaders.push_back(*blane);
-            break;
-        }
-        case (7):
-        {
-            int randX, randY;
-            do
-            {
-                randX = rand() % (400 - 375) + 375;
-                randY = rand() % (400 - 375) + 375;
-            } while ((abs(randX - 200) + abs(200 - randY)) < 350 || (abs(randX - 200) + abs(200 - randY)) > 400);
-
-            w_row = randX;
-            w_col = randY;
-
-            std::ifstream file;
-            file.open("rockGym.txt");
-            std::string curLine;
-            for (int i = 0; i < 21; i++)
-            {
-                getline(file, curLine);
-                for (int j = 0; j < 40; j++)
-                {
-                    if (curLine[j] == '%')
-                    {
-                        Ggrid[i][j] = TT_BOULDER;
-                    }
-                    else if (curLine[j] == '.')
-                    {
-                        Ggrid[i][j] = TT_SGRASS;
-                    }
-                    // else
-                    // {
-                    //     std::cout << 'Error at terrain gen' << std::endl;
-                    // }
-                }
-            }
-            badge = "Earth Badge";
-            NPC *giovanni = new NPC(CT_LEADER, 5, "Giovanni", w_row, w_col);
-            charGrid[giovanni->row][giovanni->col] = giovanni;
-            leaders.push_back(*giovanni);
-            NPC *blue = new NPC(CT_LEADER, rand() % 19, "Blue", w_row, w_col);
-            charGrid[blue->row][blue->col] = blue;
-            leaders.push_back(*blue);
-            break;
-        }
-        case (8):
-        {
-            int randX, randY;
-            if (rand() % 2 == 0 ? randX = 0 : randX = 399);
-            if (rand() % 2 == 0 ? randY = 0 : randY = 399);
-            w_row = randX;
-            w_col = randY;
-
-            std::ifstream file;
-            file.open("rockGym.txt");
-            std::string curLine;
-            for (int i = 0; i < 21; i++)
-            {
-                getline(file, curLine);
-                for (int j = 0; j < 40; j++)
-                {
-                    if (curLine[j] == '%')
-                    {
-                        Ggrid[i][j] = TT_BOULDER;
-                    }
-                    else if (curLine[j] == '.')
-                    {
-                        Ggrid[i][j] = TT_SGRASS;
-                    }
-                    // else
-                    // {
-                    //     std::cout << 'Error at terrain gen' << std::endl;
-                    // }
-                }
-            }
-
-            badge = "Champion Badge";
-            NPC *lorelai = new NPC(CT_LEADER, 15, "Lorelai", w_row, w_col);
-            charGrid[lorelai->row][lorelai->col] = lorelai;
-            leaders.push_back(*lorelai);
-            NPC *bruno = new NPC(CT_LEADER, 2, "Bruno", w_row, w_col);
-            charGrid[bruno->row][bruno->col] = bruno;
-            leaders.push_back(*bruno);
-            NPC *agatha = new NPC(CT_LEADER, 8, "Agatha", w_row, w_col);
-            charGrid[agatha->row][agatha->col] = agatha;
-            leaders.push_back(*agatha);
-        }
-        }
-
-        int printBoard()
-        {
-            mvprintw(23, 0, "Goes in");
-            for (int i = 0; i < 21; i++)
-            {
-                for (int j = 0; j < 40; j++)
-                {
-                    if (charGrid[i][j] != NULL)
-                    { // if there is a character at the given spot, print the character
-                        int curChar = charGrid[i][j]->type;
-                        attron(COLOR_PAIR(COLOR_RED));
-                        if (curChar < 0 || curChar >= CT_OTHER)
-                        {
-                            mvprintw(0, 0, "ERROR: invalid character type at row:%d col:%d)", i, j);
-                            break;
-                        }
-                        else
-                        {
-                            if (curChar == CT_PLAYER)
-                            {
-                                attron(A_BOLD);
-                                mvprintw(i + 1, j, "%c", CT_to_Char(curChar));
-                                attroff(A_BOLD);
-                            }
-                            else if (curChar == CT_LEADER)
-                            {
-                                attron(A_BLINK);
-                                mvprintw(i + 1, j, "%c", CT_to_Char(curChar));
-                                attroff(A_BLINK);
-                            }
-                            else
-                            {
-                                mvprintw(i + 1, j, "%c", CT_to_Char(curChar));
-                            }
-                        }
-                        attroff(COLOR_PAIR(COLOR_RED));
-                    }
-                    else
-                    { // else print the terrain
-                        int curTerrain = Ggrid[i][j];
-                        switch (curTerrain)
-                        {
-                        case TT_HOUSE:
-                            attron(COLOR_PAIR(COLOR_WHITE));
-                            // attron(A_BOLD);
-                            // attron(A_BLINK);
-                            mvprintw(i + 1, j, "H");
-                            // attroff(A_BLINK);
-                            // attroff(A_BOLD);
-                            attroff(COLOR_PAIR(COLOR_WHITE));
-                            break;
-                        case TT_PCENTER:
-                            attron(COLOR_PAIR(COLOR_MAGENTA));
-                            mvprintw(i + 1, j, "C");
-                            attroff(COLOR_PAIR(COLOR_MAGENTA));
-                            break;
-                        case TT_PMART:
-                            attron(COLOR_PAIR(COLOR_MAGENTA));
-                            mvprintw(i + 1, j, "P");
-                            attroff(COLOR_PAIR(COLOR_MAGENTA));
-                            break;
-                        case TT_SGRASS:
-                            attron(COLOR_PAIR(COLOR_GREEN));
-                            mvprintw(i + 1, j, ".");
-                            attroff(COLOR_PAIR(COLOR_GREEN));
-                            break;
-                        case TT_TGRASS:
-                            attron(A_BOLD);
-                            attron(COLOR_PAIR(COLOR_GREEN));
-                            mvprintw(i + 1, j, ":");
-                            attroff(COLOR_PAIR(COLOR_GREEN));
-                            attroff(A_BOLD);
-                            break;
-                        case TT_WATER:
-                            attron(COLOR_PAIR(COLOR_BLUE));
-                            mvprintw(i + 1, j, "~");
-                            attroff(COLOR_PAIR(COLOR_BLUE));
-                            break;
-                        case TT_PATH: // paths are '#' so this continues
-                        case TT_GATE: // gates are '#' so this continues
-                        case TT_BRIDGE:
-                            attron(COLOR_PAIR(COLOR_YELLOW));
-                            mvprintw(i + 1, j, "#");
-                            attroff(COLOR_PAIR(COLOR_YELLOW));
-                            break;
-                        case TT_TREE: // trees are '^' so this continues
-                        case TT_FOREST:
-                            attron(COLOR_PAIR(COLOR_GREEN));
-                            mvprintw(i + 1, j, "^");
-                            attroff(COLOR_PAIR(COLOR_GREEN));
-                            break;
-                        case TT_BOULDER: // boulders are '%' so this continues
-                        case TT_MOUNTAIN:
-                            mvprintw(i + 1, j, "%%");
-                            break;
-                        case TT_NO_TERRAIN:
-                            mvprintw(i + 1, j, "0");
-                            break;
-                        default:
-                            mvprintw(0, 0, "ERROR: invalid terrain type");
-                            break;
-                        }
-                    }
-                    // printf(" ");        puts a space between each of the characters
-                }
-                // printf("\n");  no need for this with ncurses
-            }
-            // mvprintw(22,0,"0         1         2         3         4         5         6         7         8"); //DELETETHIS
-            refresh();
-            return 0;
-        };
-    }
 };
 
 class PC : public Character
@@ -3045,6 +3201,18 @@ public:
                                     break;
                                 }
                             }
+                            int exp = party[curPokemon].gainExp(opponent->party[trainerCurPokemon], false);
+                            mvprintw(13, 10, "*                                                         *");
+                            mvprintw(13, 13, "%s has gained %d exp!", party[curPokemon].identifier.c_str(), exp);
+                            while (1)
+                            {
+                                usrKey = getch();
+                                if (usrKey == ' ')
+                                {
+                                    break;
+                                }
+                            }
+
                             m->charGrid[opponent->row][opponent->col] = NULL;
                             return 0;
                         }
@@ -3472,6 +3640,17 @@ public:
                         // over = true;
                         mvprintw(13, 10, "*                                                         *");
                         mvprintw(13, 13, "You defeated the wild %s! Press space to continue.", wildPokemon->identifier.c_str());
+                        while (1)
+                        {
+                            usrKey = getch();
+                            if (usrKey == ' ')
+                            {
+                                break;
+                            }
+                        }
+                        int exp = party[curPokemon].gainExp(*wildPokemon, true);
+                        mvprintw(13, 10, "*                                                         *");
+                        mvprintw(13, 13, "%s has gained %d exp!", party[curPokemon].identifier.c_str(), exp);
                         while (1)
                         {
                             usrKey = getch();
@@ -3935,17 +4114,17 @@ Map *generateNewMap(WorldMap *WM, int row, int col)
 // calculate the cost to move to the given cell of a map
 int calc_Cost(int terrain, int chartype)
 {
-    int costs[9][13] =
-        // None,Bldr,tree,path,Bridge,PMrt,Cntr,TGras,SGras,Mtn,Forst,Wtr,Gate
+    int costs[9][22] =
+        // None,Bldr,tree,path,Bridge,PMrt,Cntr,TGras,SGras,Mtn,Forst,Wtr,Gate,pewter, cerulean, vermilion, celadon, fushia, saffron, cinnabar, viridian, elitefour
         {
-            {MAX, MAX, MAX, 10, 10, 10, 10, 20, 10, MAX, MAX, MAX, 10},    // PC
-            {MAX, MAX, MAX, 10, 10, 50, 50, 15, 10, 15, 15, MAX, MAX},     // Hiker
-            {MAX, MAX, MAX, 10, 10, 50, 50, 20, 10, MAX, MAX, MAX, MAX},   // Rival
-            {MAX, MAX, MAX, MAX, 7, MAX, MAX, MAX, MAX, MAX, MAX, 7, MAX}, // Swimmer
-            {MAX, MAX, MAX, 10, 10, 50, 50, 20, 10, MAX, MAX, MAX, MAX},   // Pacer
-            {MAX, MAX, MAX, 10, 10, 50, 50, 20, 10, MAX, MAX, MAX, MAX},   // Wanderer
-            {MAX, MAX, MAX, 10, 10, 50, 50, 20, 10, MAX, MAX, MAX, MAX},   // Explorer
-            {MAX, MAX, MAX, 10, 10, 50, 50, 20, 10, MAX, MAX, MAX, MAX},   // other
+            {MAX, MAX, MAX, 10, 10, 10, 10, 20, 10, MAX, MAX, MAX, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},             // PC
+            {MAX, MAX, MAX, 10, 10, 50, 50, 15, 10, 15, 15, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX},     // Hiker
+            {MAX, MAX, MAX, 10, 10, 50, 50, 20, 10, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX},   // Rival
+            {MAX, MAX, MAX, MAX, 7, MAX, MAX, MAX, MAX, MAX, MAX, 7, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX}, // Swimmer
+            {MAX, MAX, MAX, 10, 10, 50, 50, 20, 10, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX},   // Pacer
+            {MAX, MAX, MAX, 10, 10, 50, 50, 20, 10, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX},   // Wanderer
+            {MAX, MAX, MAX, 10, 10, 50, 50, 20, 10, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX},   // Explorer
+            {MAX, MAX, MAX, 10, 10, 50, 50, 20, 10, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX, MAX},   // other
         };
     return costs[chartype][terrain];
     return 0;
@@ -4643,12 +4822,84 @@ int enterBuilding(Map *m, PC *player, int buildingType)
         mvprintw(0, 0, "you left the PokeMart");
         return 0;
     }
+    else if (buildingType >= 13 && buildingType <= 21)
+    {
+        if (buildingType == TT_PEWTER)
+        {
+            mvprintw(4, 15, "welcome to the PokeMart! press '<' to leave");
+            NPC *brock = new NPC(CT_LEADER, 6, "Brock", w_row, w_col);
+            gyms[0]->charGrid[brock->row][brock->col] = brock;
+            gyms[0]->leaders.push_back(*brock);
+        }
+        else if (buildingType == TT_CERULEAN)
+        {
+            NPC *misty = new NPC(CT_LEADER, 11, "Misty", w_row, w_col);
+            gyms[1]->charGrid[misty->row][misty->col] = misty;
+            gyms[1]->leaders.push_back(*misty);
+        }
+        else if (buildingType == TT_VERMILION)
+        {
+            NPC *lt_Surge = new NPC(CT_LEADER, 13, "Lt. Surge", w_row, w_col);
+            gyms[2]->charGrid[lt_Surge->row][lt_Surge->col] = lt_Surge;
+            gyms[2]->leaders.push_back(*lt_Surge);
+        }
+        else if (buildingType == TT_CELADON)
+        {
+            NPC *erika = new NPC(CT_LEADER, 12, "Erika", w_row, w_col);
+            gyms[3]->charGrid[erika->row][erika->col] = erika;
+            gyms[3]->leaders.push_back(*erika);
+        }
+        else if (buildingType == TT_FUSHSIA)
+        {
+            NPC *koga = new NPC(CT_LEADER, 4, "Koga", w_row, w_col);
+            gyms[4]->charGrid[koga->row][koga->col] = koga;
+            gyms[4]->leaders.push_back(*koga);
+            NPC *janine = new NPC(CT_LEADER, 4, "Janine", w_row, w_col);
+            gyms[4]->charGrid[janine->row][janine->col] = janine;
+            gyms[4]->leaders.push_back(*janine);
+        }
+        else if (buildingType == TT_SAFFRON)
+        {
+            NPC *sabrina = new NPC(CT_LEADER, 14, "Sabrina", w_row, w_col);
+            gyms[5]->charGrid[sabrina->row][sabrina->col] = sabrina;
+            gyms[5]->leaders.push_back(*sabrina);
+        }
+        else if (buildingType == TT_CINNABAR)
+        {
+            NPC *blane = new NPC(CT_LEADER, 10, "blane", w_row, w_col);
+            gyms[6]->charGrid[blane->row][blane->col] = blane;
+            gyms[6]->leaders.push_back(*blane);
+        }
+        else if (buildingType == TT_VIRIDIAN)
+        {
+            NPC *giovanni = new NPC(CT_LEADER, 5, "Giovanni", w_row, w_col);
+            gyms[7]->charGrid[giovanni->row][giovanni->col] = giovanni;
+            gyms[7]->leaders.push_back(*giovanni);
+            NPC *blue = new NPC(CT_LEADER, rand() % 19, "Blue", w_row, w_col);
+            gyms[7]->charGrid[blue->row][blue->col] = blue;
+            gyms[7]->leaders.push_back(*blue);
+        }
+        else if (buildingType == TT_ELITEFOUR)
+        {
+            NPC *lorelai = new NPC(CT_LEADER, 15, "Lorelai", w_row, w_col);
+            gyms[8]->charGrid[lorelai->row][lorelai->col] = lorelai;
+            gyms[8]->leaders.push_back(*lorelai);
+            NPC *bruno = new NPC(CT_LEADER, 2, "Bruno", w_row, w_col);
+            gyms[8]->charGrid[bruno->row][bruno->col] = bruno;
+            gyms[8]->leaders.push_back(*bruno);
+            NPC *agatha = new NPC(CT_LEADER, 8, "Agatha", w_row, w_col);
+            gyms[8]->charGrid[agatha->row][agatha->col] = agatha;
+            gyms[8]->leaders.push_back(*agatha);
+        }
+    }
+
     else
     {
         clearScreen_top();
         mvprintw(0, 0, "INVALID BUILDING TYPE");
         return 1; // invalid building type
     }
+    return 0;
 }
 
 //////////////////////////////////////////////////////////////////////MAIN/////////////////////////////////////////////////////////////////////////
@@ -4690,14 +4941,6 @@ int main(int argc, char *argv[])
     statsVector = parseStats();
     pokeTypesVector = parsePokemonTypes();
 
-    Gym *pewterGym = new Gym(0);
-    std::cout << pewterGym->badge << std::endl;
-    std::cout << pewterGym->w_row << std::endl;
-    std::cout << pewterGym->w_col << std::endl;
-    std::cout << ((abs(pewterGym->w_col - 200) + abs(200 - pewterGym->w_row))) << std::endl;
-    std::cout << pewterGym->leaders[0].name << std::endl;
-    std::cout << pewterGym->leaders[0].party[0].identifier << std::endl;
-
     // for (int i = 0; i < 21; i++)
     // {
     //     for (int j = 0; j < 40; j++)
@@ -4711,11 +4954,39 @@ int main(int argc, char *argv[])
     // for ncurses
     initTerminal();
 
-    pewterGym->printBoard();
-    return 0;
+    // pewterGym->printBoard();
 
     // create the first map
     WorldMap WM;
+
+    Gym *pewterGym = new Gym(0);
+    // Gym *ceruleanGym = new Gym(1);
+    // Gym *vermilionGym = new Gym(2);
+    // Gym *celadonGym = new Gym(3);
+    // Gym *fuchsiaGym = new Gym(4);
+    // Gym *saffronGym = new Gym(5);
+    // Gym *cinnabarGym = new Gym(6);
+    // Gym *viridianGym = new Gym(7);
+    // Gym *eliteFour = new Gym(8);
+    gyms[0] = pewterGym;
+    // gyms[1] = ceruleanGym;
+    // gyms[2] = vermilionGym;
+    // gyms[3] = celadonGym;
+    // gyms[4] = fuchsiaGym;
+    // gyms[5] = saffronGym;
+    // gyms[6] = cinnabarGym;
+    // gyms[7] = viridianGym;
+    // gyms[8] = eliteFour;
+
+    mvprintw(24, 0, "(%d, %d)", (200 - gyms[0]->w_row), (gyms[0]->w_col - 200));
+
+    // mvprintw(24, 0, "(%d, %d)", gyms[0]->w_row, gyms[0]->w_col);
+
+    // for (int i = 0; i < 9; i++)
+    // {
+    //     mvprintw(24 + i, 0, "(%d, %d)", gyms[i]->w_row, gyms[i]->w_col);
+    // }
+
     WM.mapGrid[200][200] = generateNewMap(&WM, 200, 200);
 
     // initialize the player
@@ -4979,6 +5250,60 @@ int main(int argc, char *argv[])
                 clearScreen_top();
                 mvprintw(0, 0, "entering pokecenter");
                 enterBuilding(curMap, &player, TT_PCENTER);
+            }
+            else if (curMap->Tgrid[player.row][player.col] == TT_PEWTER)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "entering Pewter Gym");
+                enterBuilding(curMap, &player, TT_PEWTER);
+            }
+            else if (curMap->Tgrid[player.row][player.col] == TT_CERULEAN)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "entering Cerulean Gym");
+                enterBuilding(curMap, &player, TT_CERULEAN);
+            }
+            else if (curMap->Tgrid[player.row][player.col] == TT_VERMILION)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "entering Vermilion Gym");
+                enterBuilding(curMap, &player, TT_VERMILION);
+            }
+            else if (curMap->Tgrid[player.row][player.col] == TT_CELADON)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "entering Celadon Gym");
+                enterBuilding(curMap, &player, TT_CELADON);
+            }
+            else if (curMap->Tgrid[player.row][player.col] == TT_FUSHSIA)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "entering Fushia Gym");
+                enterBuilding(curMap, &player, TT_FUSHSIA);
+            }
+            else if (curMap->Tgrid[player.row][player.col] == TT_SAFFRON)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "entering Saffron Gym");
+                enterBuilding(curMap, &player, TT_SAFFRON);
+            }
+            else if (curMap->Tgrid[player.row][player.col] == TT_CINNABAR)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "entering Cinnabar Gym");
+                enterBuilding(curMap, &player, TT_CINNABAR);
+            }
+            else if (curMap->Tgrid[player.row][player.col] == TT_VIRIDIAN)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "entering Viridian Gym");
+                enterBuilding(curMap, &player, TT_VIRIDIAN);
+            }
+            else if (curMap->Tgrid[player.row][player.col] == TT_ELITEFOUR)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "entering Elite Four Gym");
+                enterBuilding(curMap, &player, TT_ELITEFOUR);
             }
             else
             {
