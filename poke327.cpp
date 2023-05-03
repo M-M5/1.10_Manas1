@@ -422,6 +422,7 @@ public:
     int w_row;
     int w_col;
     std::string badge;
+    std::string name;
     int terrainType;
 
     bool leaderSet;
@@ -445,6 +446,7 @@ public:
         {
         case (0):
         {
+            name = "Pewter Gym";
             terrainType = 13;
             int randX, randY;
             do
@@ -457,7 +459,7 @@ public:
             w_col = randY;
 
             std::ifstream file;
-            file.open("rockGym.txt");
+            file.open("pewterGym.txt");
             std::string curLine;
             for (int i = 0; i < 21; i++)
             {
@@ -471,6 +473,18 @@ public:
                     else if (curLine[j] == '.')
                     {
                         Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else if (curLine[j] == '~')
+                    {
+                        Ggrid[i][j] = TT_WATER;
+                    }
+                    else if (curLine[j] == '#')
+                    {
+                        Ggrid[i][j] = TT_PATH;
+                    }
+                    else if (curLine[j] == '^')
+                    {
+                        Ggrid[i][j] = TT_TREE;
                     }
                     else
                     {
@@ -488,6 +502,7 @@ public:
         }
         case (1):
         {
+            name = "Cerulean Gym";
             terrainType = 14;
             int randX, randY;
             do
@@ -500,7 +515,7 @@ public:
             w_col = randY;
 
             std::ifstream file;
-            file.open("rockGym.txt");
+            file.open("ceruleanGym.txt");
             std::string curLine;
             for (int i = 0; i < 21; i++)
             {
@@ -514,6 +529,18 @@ public:
                     else if (curLine[j] == '.')
                     {
                         Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else if (curLine[j] == '~')
+                    {
+                        Ggrid[i][j] = TT_WATER;
+                    }
+                    else if (curLine[j] == '#')
+                    {
+                        Ggrid[i][j] = TT_PATH;
+                    }
+                    else if (curLine[j] == '^')
+                    {
+                        Ggrid[i][j] = TT_TREE;
                     }
                     else
                     {
@@ -529,6 +556,7 @@ public:
         }
         case (2):
         {
+            name = "Vermillion Gym";
             terrainType = 15;
             int randX, randY;
             do
@@ -541,7 +569,7 @@ public:
             w_col = randY;
 
             std::ifstream file;
-            file.open("rockGym.txt");
+            file.open("vermillionGym.txt");
             std::string curLine;
             for (int i = 0; i < 21; i++)
             {
@@ -555,6 +583,18 @@ public:
                     else if (curLine[j] == '.')
                     {
                         Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else if (curLine[j] == '~')
+                    {
+                        Ggrid[i][j] = TT_WATER;
+                    }
+                    else if (curLine[j] == '#')
+                    {
+                        Ggrid[i][j] = TT_PATH;
+                    }
+                    else if (curLine[j] == '^')
+                    {
+                        Ggrid[i][j] = TT_TREE;
                     }
                     else
                     {
@@ -570,6 +610,7 @@ public:
         }
         case (3):
         {
+            name = "Celadon Gym";
             terrainType = 16;
             int randX, randY;
             do
@@ -582,7 +623,7 @@ public:
             w_col = randY;
 
             std::ifstream file;
-            file.open("rockGym.txt");
+            file.open("celadonGym.txt");
             std::string curLine;
             for (int i = 0; i < 21; i++)
             {
@@ -596,6 +637,18 @@ public:
                     else if (curLine[j] == '.')
                     {
                         Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else if (curLine[j] == '~')
+                    {
+                        Ggrid[i][j] = TT_WATER;
+                    }
+                    else if (curLine[j] == '#')
+                    {
+                        Ggrid[i][j] = TT_PATH;
+                    }
+                    else if (curLine[j] == '^')
+                    {
+                        Ggrid[i][j] = TT_TREE;
                     }
                     else
                     {
@@ -611,6 +664,7 @@ public:
         }
         case (4):
         {
+            name = "Fushia Gym";
             terrainType = 17;
             int randX, randY;
             do
@@ -623,7 +677,7 @@ public:
             w_col = randY;
 
             std::ifstream file;
-            file.open("rockGym.txt");
+            file.open("fushiaGym.txt");
             std::string curLine;
             for (int i = 0; i < 21; i++)
             {
@@ -637,6 +691,18 @@ public:
                     else if (curLine[j] == '.')
                     {
                         Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else if (curLine[j] == '~')
+                    {
+                        Ggrid[i][j] = TT_WATER;
+                    }
+                    else if (curLine[j] == '#')
+                    {
+                        Ggrid[i][j] = TT_PATH;
+                    }
+                    else if (curLine[j] == '^')
+                    {
+                        Ggrid[i][j] = TT_TREE;
                     }
                     else
                     {
@@ -655,6 +721,7 @@ public:
         }
         case (5):
         {
+            name = "Saffron Gym";
             terrainType = 18;
             int randX, randY;
             do
@@ -682,6 +749,18 @@ public:
                     {
                         Ggrid[i][j] = TT_SGRASS;
                     }
+                    else if (curLine[j] == '~')
+                    {
+                        Ggrid[i][j] = TT_WATER;
+                    }
+                    else if (curLine[j] == '#')
+                    {
+                        Ggrid[i][j] = TT_PATH;
+                    }
+                    else if (curLine[j] == '^')
+                    {
+                        Ggrid[i][j] = TT_TREE;
+                    }
                     else
                     {
                         Ggrid[i][j] = TT_NO_TERRAIN;
@@ -696,6 +775,7 @@ public:
         }
         case (6):
         {
+            name = "Cinnabar Gym";
             terrainType = 19;
             int randX, randY;
             do
@@ -723,6 +803,18 @@ public:
                     {
                         Ggrid[i][j] = TT_SGRASS;
                     }
+                    else if (curLine[j] == '~')
+                    {
+                        Ggrid[i][j] = TT_WATER;
+                    }
+                    else if (curLine[j] == '#')
+                    {
+                        Ggrid[i][j] = TT_PATH;
+                    }
+                    else if (curLine[j] == '^')
+                    {
+                        Ggrid[i][j] = TT_TREE;
+                    }
                     else
                     {
                         Ggrid[i][j] = TT_NO_TERRAIN;
@@ -737,6 +829,7 @@ public:
         }
         case (7):
         {
+            name = "Viridian Gym";
             terrainType = 20;
             int randX, randY;
             do
@@ -764,6 +857,18 @@ public:
                     {
                         Ggrid[i][j] = TT_SGRASS;
                     }
+                    else if (curLine[j] == '~')
+                    {
+                        Ggrid[i][j] = TT_WATER;
+                    }
+                    else if (curLine[j] == '#')
+                    {
+                        Ggrid[i][j] = TT_PATH;
+                    }
+                    else if (curLine[j] == '^')
+                    {
+                        Ggrid[i][j] = TT_TREE;
+                    }
                     else
                     {
                         Ggrid[i][j] = TT_NO_TERRAIN;
@@ -781,6 +886,7 @@ public:
         }
         case (8):
         {
+            name = "Final Gym";
             terrainType = 21;
             int randX, randY;
             if (rand() % 2 == 0 ? randX = 0 : randX = 399)
@@ -805,6 +911,18 @@ public:
                     else if (curLine[j] == '.')
                     {
                         Ggrid[i][j] = TT_SGRASS;
+                    }
+                    else if (curLine[j] == '~')
+                    {
+                        Ggrid[i][j] = TT_WATER;
+                    }
+                    else if (curLine[j] == '#')
+                    {
+                        Ggrid[i][j] = TT_PATH;
+                    }
+                    else if (curLine[j] == '^')
+                    {
+                        Ggrid[i][j] = TT_TREE;
                     }
                     else
                     {
@@ -2392,14 +2510,16 @@ public:
         int exp = floor(((baseOppExp * lvlOpp) / 7) * ownershipType);
 
         totalExp += exp;
-        level = std::cbrt(totalExp);
-
-        max_HP = HP = floor((((pokeStatsTemp[0].base_stat + (rand() % 15)) * 2) * level) / 100) + level + 10;
-        attack = floor(((pokeStatsTemp[1].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
-        defense = floor(((pokeStatsTemp[2].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
-        special_attack = floor(((pokeStatsTemp[3].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
-        special_defense = floor(((pokeStatsTemp[4].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
-        speed = floor(((pokeStatsTemp[5].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
+        if (level < 99)
+        {
+            level = std::cbrt(totalExp);
+            max_HP = HP = floor((((pokeStatsTemp[0].base_stat + (rand() % 15)) * 2) * level) / 100) + level + 10;
+            attack = floor(((pokeStatsTemp[1].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
+            defense = floor(((pokeStatsTemp[2].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
+            special_attack = floor(((pokeStatsTemp[3].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
+            special_defense = floor(((pokeStatsTemp[4].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
+            speed = floor(((pokeStatsTemp[5].base_stat + (rand() % 15) * 2) * level) / 100) + 5;
+        }
 
         return exp;
     };
@@ -2695,7 +2815,7 @@ public:
     {
         name = leaderName;
         type = NPCtype;
-        row = 2;
+        row = 8;
         col = rand() % 38 + 1;
         direction = NO_DIRECTION;
         isDefeated = 0;
@@ -3007,16 +3127,17 @@ public:
         }
     }
 
-    int battle(Map *m, NPC *opponent)
+    int battle(NPC *opponent)
     {
 
         createPanel(3, 20, 10, 69);
         mvprintw(12, 10, "***********************************************************");
         mvprintw(13, 13, "%s wants to battle you! Press space to continue", opponent->name.c_str());
+        mvprintw(23, 0, "isDefeated: %d", opponent->isDefeated);
 
         int trainerCurPokemon = 0;
 
-        mvprintw(25, 0, "Opponent party size: %d", (int)opponent->party.size());
+        mvprintw(22, 0, "Opponent party size: %d", (int)opponent->party.size());
 
         int usrKey;
         while (1)
@@ -3028,7 +3149,21 @@ public:
             }
         }
 
+        for (int i = 0; i < (int)opponent->party.size(); i++)
+        {
+            if (opponent->party[i].HP > 0)
+            {
+                trainerCurPokemon = i;
+                break;
+            }
+        }
+
         int curPokemon = -1;
+
+        for (int i = 0; i < (int)party.size(); i++)
+        {
+            mvprintw(23 + i, 15, "%s HP: %d, LVL: %d", party[i].identifier.c_str(), party[i].HP, party[i].level);
+        }
 
         for (int i = 0; i < (int)party.size(); i++) // Determines a pokemon to send out
         {
@@ -3213,26 +3348,12 @@ public:
                                 }
                             }
 
-
-
-
-
-
-
-
-
-
-
-
-
+                            opponent->isDefeated = 1;
                             // m->charGrid[opponent->row][opponent->col] = NULL;
 
-// REMOVED FOR TESTING
+                            // REMOVED FOR TESTING
 
-
-
-
-                            return 0;
+                            return 5;
                         }
                         else // Trainer has more available pokemon to fight
                         {
@@ -4679,21 +4800,22 @@ int moveCharacters(Map *m, WorldMap *WM, PC *player, int *retVal)
         // If NPC is already dead, just remove and ignore it (could happen when player walks into an enemy)
         if (curNPC->isDefeated == 1)
         {
+            m->charGrid[curNPC->row][curNPC->col] = NULL;
             free(retNode);
             return 0;
         }
 
         // if the character is an NPC and is moving into the player, battle that NPC
-        if (curNPC->nextCol == player->col && curNPC->nextRow == player->row)
+        if (curNPC->nextCol == player->col && curNPC->nextRow == player->row && curNPC->isDefeated == 0)
         {
             // enter battle with the NPC
-            player->battle(m, curNPC);
+            player->battle(curNPC);
         }
         // dealing with swimmer who attack the player if they are in an adjacent cell to the player
-        else if (curNPC->type == CT_SWIMMER && abs(curNPC->nextCol - player->col) <= 1 && abs(curNPC->nextRow - player->row) <= 1)
+        else if (curNPC->type == CT_SWIMMER && abs(curNPC->nextCol - player->col) <= 1 && abs(curNPC->nextRow - player->row) <= 1 && curNPC->isDefeated == 0)
         {
             // if the swimmer is in an adjacent cell to the player, attack the player
-            player->battle(m, curNPC);
+            player->battle(curNPC);
         }
 
         // only move if there is no LIVE character already in the spot you want to go to
@@ -4828,13 +4950,13 @@ int playGym(Gym *gym, PC *player, WorldMap *WM, Map *m)
 {
     // gym->printGym();
     GQdequeueAll(&(WM->charQueue));
-    // int tmpRow = player->row;
-    // int tmpCol = player->col;
+    int tmpRow = player->row;
+    int tmpCol = player->col;
 
     m->charGrid[player->row][player->col] = NULL;
-    player->updateCoords(10, 10);
-    player->updateNextCoords(10, 10);
-    gym->charGrid[10][10] = player;
+    player->updateCoords(20, 20);
+    player->updateNextCoords(20, 20);
+    gym->charGrid[20][20] = player;
     for (NPC leader : gym->leaders)
     {
         GQenqueue(&(WM->charQueue), leader.row, leader.col, leader.nextCost, &leader);
@@ -4844,18 +4966,20 @@ int playGym(Gym *gym, PC *player, WorldMap *WM, Map *m)
     mvprintw(29, 0, "Size of the queue: %d", WM->charQueue.length);
     // for (int i = 0; i < WM->charQueue.length; i++)
     // {
-        // mvprintw(30 + i, 0, "Character %s", wm->);
+    // mvprintw(30 + i, 0, "Character %s", wm->);
     // }
     gym->printGym();
 
     bool left = false;
     int key;
-    int skipLastTurn;
-
+    // int skipLastTurn;
+    int numDef = 0;
     while (!left)
-    // curMap = WM.mapGrid[w_row][w_col];
+    {
+        mvprintw(22, 0, "%d", numDef);
+        // curMap = WM.mapGrid[w_row][w_col];
         key = getch();
-        skipLastTurn = 0;
+        // skipLastTurn = 0;
         int usrKey, usrNum, status;
         switch (key)
         {
@@ -5055,35 +5179,91 @@ int playGym(Gym *gym, PC *player, WorldMap *WM, Map *m)
             clearScreen_top();
             mvprintw(0, 0, "rest");
             break;
+        case KEY_LEFT:
+        {
+            left = true;
+        }
         default:
             // print out key that was pressed
             clearScreen_top();
             mvprintw(0, 0, "Unknown Key: %d", key);
-            skipLastTurn = 1;
+            // skipLastTurn = 1;
         }
 
         // Dealing with PC movement
         if (gym->charGrid[player->nextRow][player->nextCol] != NULL && gym->charGrid[player->nextRow][player->nextCol]->type != CT_PLAYER && dynamic_cast<NPC *>(gym->charGrid[player->nextRow][player->nextCol])->isDefeated == 0)
         { // I CAN DYNAMIC CAST THE CHARACTER HERE BECUASE EARLIER IN THE CONDITIONAL I CHECKED IF IT WAS THE PC
-            player->battle(curMap, dynamic_cast<NPC *>(curMap->charGrid[player.nextRow][player.nextCol]));
+            int status = player->battle(dynamic_cast<NPC *>(gym->charGrid[player->nextRow][player->nextCol]));
+            if (status == 5)
+            {
+                numDef++;
+            }
         }
         // only move if there is no LIVE character already in the spot you want to go to
         else
         {
             // remove the character from the charMap and update node's coords
-            curMap->charGrid[player.row][player.col] = NULL;
-            player.updateCoords(player.nextRow, player.nextCol);
+            gym->charGrid[player->row][player->col] = NULL;
+            player->updateCoords(player->nextRow, player->nextCol);
         }
 
-        GQenqueue(&(WM->charQueue), player->row, player->col, retVal + player.nextCost, &player); // the character is enqueued with a value of its old value PLUS the new cost to move to the new terrain
-        gym->charGrid[player->row][player->col] = &player;
+        GQenqueue(&(WM->charQueue), player->row, player->col, player->nextCost, player); // the character is enqueued with a value of its old value PLUS the new cost to move to the new terrain
+        gym->charGrid[player->row][player->col] = player;
+
+        // while (skipLastTurn == 0 && moveCharacters(curMap, &WM, &player, &retVal) != 2)
+        // { // the move characters function returns 0 if an NPC is dequeued and a -1 if it fails
+        //   // curMap->printBoard();
+        //   // mvprintw(25,0, "%d", rand()%100); refresh(); FORTESTING
+        // }
         gym->printGym();
 
-    // int usrKey;
-    // do
-    // {
-    //     usrKey = getch();
-    // } while (usrKey != KEY_LEFT);
+        if (numDef >= (int)gym->leaders.size())
+        {
+            createPanel(3, 20, 10, 69);
+            mvprintw(12, 10, "***********************************************************");
+            mvprintw(13, 13, "Tough battle, but you've done well!");
+            while (1)
+            {
+                usrKey = getch();
+                if (usrKey == ' ')
+                {
+                    break;
+                }
+            }
+            mvprintw(13, 10, "*                                                         *");
+            mvprintw(13, 13, "You have obtained the %s!", gym->badge.c_str());
+            while (1)
+            {
+                usrKey = getch();
+                if (usrKey == ' ')
+                {
+                    break;
+                }
+            }
+            left = true;
+            player->numBadges++;
+        }
+    }
+    gym->charGrid[player->row][player->col] = NULL;
+    GQdequeueAll(&(WM->charQueue));
+    m->charGrid[tmpRow][tmpCol] = player;
+    player->updateCoords(tmpRow, tmpCol);
+    player->updateNextCoords(tmpRow, tmpCol);
+    enqueueAllChars(&(WM->charQueue), m);
+    /*
+    GQdequeueAll(&(WM->charQueue));
+        int tmpRow = player->row;
+        int tmpCol = player->col;
+
+        m->charGrid[player->row][player->col] = NULL;
+        player->updateCoords(10, 10);
+        player->updateNextCoords(10, 10);
+        gym->charGrid[10][10] = player;
+        for (NPC leader : gym->leaders)
+        {
+            GQenqueue(&(WM->charQueue), leader.row, leader.col, leader.nextCost, &leader);
+        }
+        GQenqueue(&(WM->charQueue), player->row, player->col, 0, player);*/
 
     return 0;
 }
@@ -5145,9 +5325,9 @@ int enterBuilding(WorldMap *WM, Map *m, PC *player, int buildingType)
             playGym(gyms[0], player, WM, m);
 
             // curGym = gyms[0];
-            mvprintw(26, 0, "Has created the leader and has placed it in the charGrid");
+            // mvprintw(26, 0, "Has created the leader and has placed it in the charGrid");
         }
-        /*
+
         else if (buildingType == TT_CERULEAN)
         {
             // mvprintw(4, 15, "welcome to the Cerulean Gym! press '<' to leave");
@@ -5159,8 +5339,9 @@ int enterBuilding(WorldMap *WM, Map *m, PC *player, int buildingType)
                 gyms[1]->leaderSet = true;
             }
 
-            curGym = gyms[1];
+            playGym(gyms[1], player, WM, m);
         }
+
         else if (buildingType == TT_VERMILION)
         {
             // mvprintw(4, 15, "welcome to the Vermilion Gym! press '<' to leave");
@@ -5172,7 +5353,7 @@ int enterBuilding(WorldMap *WM, Map *m, PC *player, int buildingType)
                 gyms[2]->leaderSet = true;
             }
 
-            curGym = gyms[2];
+            playGym(gyms[2], player, WM, m);
         }
         else if (buildingType == TT_CELADON)
         {
@@ -5184,7 +5365,7 @@ int enterBuilding(WorldMap *WM, Map *m, PC *player, int buildingType)
                 gyms[3]->leaderSet = true;
             }
 
-            curGym = gyms[3];
+            playGym(gyms[3], player, WM, m);
         }
         else if (buildingType == TT_FUSHSIA)
         {
@@ -5199,7 +5380,7 @@ int enterBuilding(WorldMap *WM, Map *m, PC *player, int buildingType)
                 gyms[4]->leaderSet = true;
             }
 
-            curGym = gyms[4];
+            playGym(gyms[4], player, WM, m);
         }
         else if (buildingType == TT_SAFFRON)
         {
@@ -5211,7 +5392,7 @@ int enterBuilding(WorldMap *WM, Map *m, PC *player, int buildingType)
                 gyms[5]->leaderSet = true;
             }
 
-            curGym = gyms[5];
+            playGym(gyms[5], player, WM, m);
         }
         else if (buildingType == TT_CINNABAR)
         {
@@ -5223,7 +5404,7 @@ int enterBuilding(WorldMap *WM, Map *m, PC *player, int buildingType)
                 gyms[6]->leaderSet = true;
             }
 
-            curGym = gyms[6];
+            playGym(gyms[6], player, WM, m);
         }
         else if (buildingType == TT_VIRIDIAN)
         {
@@ -5238,7 +5419,7 @@ int enterBuilding(WorldMap *WM, Map *m, PC *player, int buildingType)
                 gyms[7]->leaderSet = true;
             }
 
-            curGym = gyms[7];
+            playGym(gyms[7], player, WM, m);
         }
         else if (buildingType == TT_ELITEFOUR)
         {
@@ -5256,16 +5437,15 @@ int enterBuilding(WorldMap *WM, Map *m, PC *player, int buildingType)
                 gyms[8]->leaderSet = true;
             }
 
-            curGym = gyms[8];
+            playGym(gyms[8], player, WM, m);
         }
-        */
 
         // mvprintw(27, 0, "Attempts to print gym");
         // curGym->printGym();
-        do
-        {
-            usrKey = getch();
-        } while (usrKey != KEY_LEFT);
+        // do
+        // {
+        //     usrKey = getch();
+        // } while (usrKey != KEY_LEFT);
     }
 
     else
@@ -5357,11 +5537,6 @@ int main(int argc, char *argv[])
 
     // mvprintw(24, 0, "(%d, %d)", gyms[0]->w_row, gyms[0]->w_col);
 
-    for (int i = 0; i < 9; i++)
-    {
-        mvprintw(24 + i, 0, "(%d, %d)", (200 - gyms[i]->w_row), (gyms[i]->w_col - 200));
-    }
-
     WM.mapGrid[200][200] = generateNewMap(&WM, 200, 200);
 
     // initialize the player
@@ -5420,6 +5595,51 @@ int main(int argc, char *argv[])
         int usrKey, usrNum, status;
         switch (key)
         {
+        case 'P':
+        {
+            createPanel(3, 20, 10, 69);
+            mvprintw(4, 35, "Pokemon List");
+            for (int i = 0; i < (int)player.party.size(); i++)
+            {
+                mvprintw(6 + i, 12, "%s, HP: %d, LVL: %d", player.party[i].identifier.c_str(), player.party[i].HP, player.party[i].level);
+            }
+            while (1)
+            {
+                usrKey = getch();
+                if (usrKey == 'P')
+                {
+                    break;
+                }
+            }
+            break;
+        }
+        case 'G':
+        {
+            createPanel(3, 20, 10, 69);
+            mvprintw(4, 35, "Gym List");
+            for (int i = 0; i < 9; i++)
+            {
+                mvprintw(6 + i, 12, "%s: (%d, %d)", gyms[i]->name.c_str(),(200 - gyms[i]->w_row), (gyms[i]->w_col - 200));
+            }
+            while (1)
+            {
+                usrKey = getch();
+                if (usrKey == 'G')
+                {
+                    break;
+                }
+            }
+            break;
+        }
+        case 'M':
+        {
+            while ((int)player.party.size() < 6)
+            {
+                personalPokemon *randomPkmn = new personalPokemon(399, 399);
+                player.party.push_back(*randomPkmn);
+            }
+            break;
+        }
         case 'B':
         {
             createPanel(12, 20, 10, 69);
@@ -5730,7 +5950,7 @@ int main(int argc, char *argv[])
         // Dealing with PC movement
         if (curMap->charGrid[player.nextRow][player.nextCol] != NULL && curMap->charGrid[player.nextRow][player.nextCol]->type != CT_PLAYER && dynamic_cast<NPC *>(curMap->charGrid[player.nextRow][player.nextCol])->isDefeated == 0)
         { // I CAN DYNAMIC CAST THE CHARACTER HERE BECUASE EARLIER IN THE CONDITIONAL I CHECKED IF IT WAS THE PC
-            player.battle(curMap, dynamic_cast<NPC *>(curMap->charGrid[player.nextRow][player.nextCol]));
+            player.battle(dynamic_cast<NPC *>(curMap->charGrid[player.nextRow][player.nextCol]));
         }
         // only move if there is no LIVE character already in the spot you want to go to
         else
