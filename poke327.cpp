@@ -61,7 +61,7 @@ int NUMTRAINERS = 0;
 
 int w_row;
 int w_col;
-Gym *gyms[8];
+Gym *gyms[9];
 
 typedef enum GymType
 {
@@ -88,6 +88,7 @@ typedef enum CharacterType
     CT_SENTRY,
     CT_OTHER,
     CT_LEADER
+
 } CharacterType;
 
 typedef enum TerrainType
@@ -423,12 +424,15 @@ public:
     std::string badge;
     int terrainType;
 
+    bool leaderSet;
+
     // Gym() : leaders(0), w_row(0), w_col(0), badge("None")
     // {
     // }
 
     Gym(int gym)
     {
+        leaderSet = false;
 
         switch (gym)
         {
@@ -468,6 +472,8 @@ public:
                 }
             }
             badge = "Boulder Badge";
+            NPC *brock;
+            leaders.push_back(*brock);
             // NPC *brock = new NPC(CT_LEADER, 6, "Brock", w_row, w_col);
             // charGrid[brock->row][brock->col] = brock;
             // leaders.push_back(*brock);
@@ -816,6 +822,9 @@ public:
 
     int printGym()
     {
+        // clear the screen
+        clear();
+
         mvprintw(23, 0, "Goes in");
         for (int i = 0; i < 21; i++)
         {
@@ -825,7 +834,7 @@ public:
                 { // if there is a character at the given spot, print the character
                     int curChar = charGrid[i][j]->type;
                     attron(COLOR_PAIR(COLOR_RED));
-                    if (curChar < 0 || curChar >= CT_OTHER)
+                    if (curChar < 0 || curChar == CT_OTHER)
                     {
                         mvprintw(0, 0, "ERROR: invalid character type at row:%d col:%d)", i, j);
                         break;
@@ -1188,76 +1197,76 @@ public:
         int distance = abs(globalRow - 200) + abs(globalCol - 200); // Manhattan distance from center of board
         int randSpawnNum = rand() % 400;                            // generates a random number from 0 to 399
 
-        if (gyms[0]->w_row == w_row && gyms[0]->w_col == w_col)
-        {
-            mvprintw(25, 0, "ATTEMTPS TO FIND LOCATION ");
-            while (1)
-            {
-                randRow = rand() % 14 + 3;
-                randCol = rand() % 73 + 3;
-                int terrain = gyms[0]->terrainType;
-
-                // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-right of path)
-                if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol + 1] != TT_PATH && Tgrid[randRow][randCol + 2] != TT_PATH && Tgrid[randRow - 1][randCol + 1] != TT_PATH && Tgrid[randRow - 1][randCol + 2] != TT_PATH &&
-                    Tgrid[randRow][randCol + 1] != TT_BRIDGE && Tgrid[randRow][randCol + 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 2] != TT_BRIDGE)
-                {
-                    Tgrid[randRow][randCol + 1] = terrain;
-                    Tgrid[randRow][randCol + 2] = terrain;
-                    Tgrid[randRow - 1][randCol + 1] = terrain;
-                    Tgrid[randRow - 1][randCol + 2] = terrain;
-                    break;
-                }
-
-                // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-left of path)
-                if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol - 1] != TT_PATH && Tgrid[randRow][randCol - 2] != TT_PATH && Tgrid[randRow - 1][randCol - 1] != TT_PATH && Tgrid[randRow - 1][randCol - 2] != TT_PATH &&
-                    Tgrid[randRow][randCol - 1] != TT_BRIDGE && Tgrid[randRow][randCol - 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 2] != TT_BRIDGE)
-                {
-
-                    Tgrid[randRow][randCol - 1] = terrain;
-                    Tgrid[randRow][randCol - 2] = terrain;
-                    Tgrid[randRow - 1][randCol - 1] = terrain;
-                    Tgrid[randRow - 1][randCol - 2] = terrain;
-                    break;
-                }
-            }
-        }
-
-        // for (int i = 0; i < 9; i++)
+        // if (gyms[0]->w_row == w_row && gyms[0]->w_col == w_col)
         // {
-        //     if (gyms[i]->w_row == w_row && gyms[i]->w_col == w_col)
+        //     // mvprintw(25, 0, "Attenpts to place gym %s", gym[i]->name);
+        //     while (1)
         //     {
-        //         while (1)
+        //         randRow = rand() % 14 + 3;
+        //         randCol = rand() % 73 + 3;
+        //         int terrain = gyms[0]->terrainType;
+
+        //         // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-right of path)
+        //         if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol + 1] != TT_PATH && Tgrid[randRow][randCol + 2] != TT_PATH && Tgrid[randRow - 1][randCol + 1] != TT_PATH && Tgrid[randRow - 1][randCol + 2] != TT_PATH &&
+        //             Tgrid[randRow][randCol + 1] != TT_BRIDGE && Tgrid[randRow][randCol + 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 2] != TT_BRIDGE)
         //         {
-        //             randRow = rand() % 14 + 3;
-        //             randCol = rand() % 73 + 3;
-        //             int terrain = gyms[i]->terrainType;
-
-        //             // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-right of path)
-        //             if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol + 1] != TT_PATH && Tgrid[randRow][randCol + 2] != TT_PATH && Tgrid[randRow - 1][randCol + 1] != TT_PATH && Tgrid[randRow - 1][randCol + 2] != TT_PATH &&
-        //                 Tgrid[randRow][randCol + 1] != TT_BRIDGE && Tgrid[randRow][randCol + 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 2] != TT_BRIDGE)
-        //             {
-        //                 Tgrid[randRow][randCol + 1] = terrain;
-        //                 Tgrid[randRow][randCol + 2] = terrain;
-        //                 Tgrid[randRow - 1][randCol + 1] = terrain;
-        //                 Tgrid[randRow - 1][randCol + 2] = terrain;
-        //                 break;
-        //             }
-
-        //             // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-left of path)
-        //             if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol - 1] != TT_PATH && Tgrid[randRow][randCol - 2] != TT_PATH && Tgrid[randRow - 1][randCol - 1] != TT_PATH && Tgrid[randRow - 1][randCol - 2] != TT_PATH &&
-        //                 Tgrid[randRow][randCol - 1] != TT_BRIDGE && Tgrid[randRow][randCol - 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 2] != TT_BRIDGE)
-        //             {
-
-        //                 Tgrid[randRow][randCol - 1] = terrain;
-        //                 Tgrid[randRow][randCol - 2] = terrain;
-        //                 Tgrid[randRow - 1][randCol - 1] = terrain;
-        //                 Tgrid[randRow - 1][randCol - 2] = terrain;
-        //                 break;
-        //             }
+        //             Tgrid[randRow][randCol + 1] = terrain;
+        //             Tgrid[randRow][randCol + 2] = terrain;
+        //             Tgrid[randRow - 1][randCol + 1] = terrain;
+        //             Tgrid[randRow - 1][randCol + 2] = terrain;
+        //             break;
         //         }
-        //         break;
+
+        //         // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-left of path)
+        //         if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol - 1] != TT_PATH && Tgrid[randRow][randCol - 2] != TT_PATH && Tgrid[randRow - 1][randCol - 1] != TT_PATH && Tgrid[randRow - 1][randCol - 2] != TT_PATH &&
+        //             Tgrid[randRow][randCol - 1] != TT_BRIDGE && Tgrid[randRow][randCol - 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 2] != TT_BRIDGE)
+        //         {
+
+        //             Tgrid[randRow][randCol - 1] = terrain;
+        //             Tgrid[randRow][randCol - 2] = terrain;
+        //             Tgrid[randRow - 1][randCol - 1] = terrain;
+        //             Tgrid[randRow - 1][randCol - 2] = terrain;
+        //             break;
+        //         }
         //     }
         // }
+
+        for (int i = 0; i < 9; i++)
+        {
+            if (gyms[i]->w_row == w_row && gyms[i]->w_col == w_col)
+            {
+                while (1)
+                {
+                    randRow = rand() % 14 + 3;
+                    randCol = rand() % 73 + 3;
+                    int terrain = gyms[i]->terrainType;
+
+                    // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-right of path)
+                    if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol + 1] != TT_PATH && Tgrid[randRow][randCol + 2] != TT_PATH && Tgrid[randRow - 1][randCol + 1] != TT_PATH && Tgrid[randRow - 1][randCol + 2] != TT_PATH &&
+                        Tgrid[randRow][randCol + 1] != TT_BRIDGE && Tgrid[randRow][randCol + 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 2] != TT_BRIDGE)
+                    {
+                        Tgrid[randRow][randCol + 1] = terrain;
+                        Tgrid[randRow][randCol + 2] = terrain;
+                        Tgrid[randRow - 1][randCol + 1] = terrain;
+                        Tgrid[randRow - 1][randCol + 2] = terrain;
+                        break;
+                    }
+
+                    // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-left of path)
+                    if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol - 1] != TT_PATH && Tgrid[randRow][randCol - 2] != TT_PATH && Tgrid[randRow - 1][randCol - 1] != TT_PATH && Tgrid[randRow - 1][randCol - 2] != TT_PATH &&
+                        Tgrid[randRow][randCol - 1] != TT_BRIDGE && Tgrid[randRow][randCol - 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 2] != TT_BRIDGE)
+                    {
+
+                        Tgrid[randRow][randCol - 1] = terrain;
+                        Tgrid[randRow][randCol - 2] = terrain;
+                        Tgrid[randRow - 1][randCol - 1] = terrain;
+                        Tgrid[randRow - 1][randCol - 2] = terrain;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
 
         if (randSpawnNum >= distance)
         {
@@ -2161,7 +2170,7 @@ public:
         {
             MD = 398;
         }
-        mvprintw(26, 0, "YO YO YO %d", MD);
+        // mvprintw(26, 0, "YO YO YO %d", MD);
         level = MD <= 200 ? (rand() % ((MD / 2) - 1)) + 1 : (rand() % (100 - ((MD - 200) / 2))) + ((MD - 200) / 2);
 
         totalExp = level ^ 3;
@@ -2282,7 +2291,7 @@ public:
         {
             MD = 398;
         }
-        mvprintw(26, 0, "YO YO YO %d", MD);
+        // mvprintw(26, 0, "YO YO YO %d", MD);
         level = MD <= 200 ? (rand() % ((MD / 2) - 1)) + 1 : (rand() % (100 - ((MD - 200) / 2))) + ((MD - 200) / 2);
 
         totalExp = level ^ 3;
@@ -2829,6 +2838,7 @@ class PC : public Character
 {
 public:
     std::vector<items> bag;
+    int numBadges;
 
     // constructor to initialize the PC at a random road coordinate on the map
     PC(WorldMap *WM, Map startMap, int start_w_row, int start_w_col)
@@ -3436,9 +3446,7 @@ public:
             }
             case '4':
             {
-                // over = true;
-                mvprintw(13, 10, "*                                                         *");
-                mvprintw(13, 13, "You cannot run away from a trainer battle!");
+                mvprintw(13, 13, "You ran away from %s! Press space to continue.", opponent->name.c_str());
                 while (1)
                 {
                     usrKey = getch();
@@ -3447,8 +3455,20 @@ public:
                         break;
                     }
                 }
+                return 0;
+                // // over = true;
+                // mvprintw(13, 10, "*                                                         *");
+                // mvprintw(13, 13, "You cannot run away from a trainer battle!");
+                // while (1)
+                // {
+                //     usrKey = getch();
+                //     if (usrKey == ' ')
+                //     {
+                //         break;
+                //     }
+                // }
 
-                break;
+                // break;
             }
             default:
             {
@@ -3958,6 +3978,16 @@ public:
         return 0;
     }
 
+    /*
+        int gymMatch(Gym *curGym)
+        {
+            // Throw dialogue
+
+            // Choose leader to battle
+
+            // Battle
+        }
+        */
     // returns 1 if the player is by the water and 0 if it is not
     int playerByWater(Map *m)
     {
@@ -4790,9 +4820,10 @@ int enterBuilding(Map *m, PC *player, int buildingType)
 {
     int usrKey;
     clearScreen_top();
-    createPanel(3, 20, 10, 69);
     if (buildingType == TT_PCENTER)
     {
+        createPanel(3, 20, 10, 69);
+
         mvprintw(4, 15, "welcome to the Pokecenter! press '<' to leave");
 
         for (int i = 0; i < (int)player->party.size(); i++)
@@ -4809,6 +4840,7 @@ int enterBuilding(Map *m, PC *player, int buildingType)
     }
     else if (buildingType == TT_PMART)
     {
+        createPanel(3, 20, 10, 69);
         mvprintw(4, 15, "welcome to the PokeMart! press '<' to leave");
         for (int i = 0; i < (int)player->party.size(); i++)
         {
@@ -4824,21 +4856,38 @@ int enterBuilding(Map *m, PC *player, int buildingType)
     }
     else if (buildingType >= 13 && buildingType <= 21)
     {
+        // createPanel(3, 43, 10, 69);
+        // bool matchDone = false;
         if (buildingType == TT_PEWTER)
         {
-            mvprintw(4, 15, "welcome to the PokeMart! press '<' to leave");
-            NPC *brock = new NPC(CT_LEADER, 6, "Brock", w_row, w_col);
-            gyms[0]->charGrid[brock->row][brock->col] = brock;
-            gyms[0]->leaders.push_back(*brock);
+            // if (gyms[0]->leaderSet == false)
+            // {
+                // leaders[0] = new NPC(CT_LEADER, 6, "Brock", w_row, w_col);
+            // }
+            // gyms[0]->charGrid[brock->row][brock->col] = brock;
+            // gyms[0]->leaders.push_back(*brock);
+
+            gyms[0]->printGym();
+            // mvprintw(4, 15, "welcome to the Pewter Gym! press '<' to leave");
+            // for (int i = 0; i < (int)player->party.size(); i++)
+            // {
+            //     player->party[i].HP = player->party[i].max_HP;
+            // }
+            do
+            {
+                usrKey = getch();
+            } while (usrKey != KEY_LEFT);
         }
         else if (buildingType == TT_CERULEAN)
         {
+            // mvprintw(4, 15, "welcome to the Cerulean Gym! press '<' to leave");
             NPC *misty = new NPC(CT_LEADER, 11, "Misty", w_row, w_col);
             gyms[1]->charGrid[misty->row][misty->col] = misty;
             gyms[1]->leaders.push_back(*misty);
         }
         else if (buildingType == TT_VERMILION)
         {
+            // mvprintw(4, 15, "welcome to the Vermilion Gym! press '<' to leave");
             NPC *lt_Surge = new NPC(CT_LEADER, 13, "Lt. Surge", w_row, w_col);
             gyms[2]->charGrid[lt_Surge->row][lt_Surge->col] = lt_Surge;
             gyms[2]->leaders.push_back(*lt_Surge);
@@ -4960,32 +5009,32 @@ int main(int argc, char *argv[])
     WorldMap WM;
 
     Gym *pewterGym = new Gym(0);
-    // Gym *ceruleanGym = new Gym(1);
-    // Gym *vermilionGym = new Gym(2);
-    // Gym *celadonGym = new Gym(3);
-    // Gym *fuchsiaGym = new Gym(4);
-    // Gym *saffronGym = new Gym(5);
-    // Gym *cinnabarGym = new Gym(6);
-    // Gym *viridianGym = new Gym(7);
-    // Gym *eliteFour = new Gym(8);
+    Gym *ceruleanGym = new Gym(1);
+    Gym *vermilionGym = new Gym(2);
+    Gym *celadonGym = new Gym(3);
+    Gym *fuchsiaGym = new Gym(4);
+    Gym *saffronGym = new Gym(5);
+    Gym *cinnabarGym = new Gym(6);
+    Gym *viridianGym = new Gym(7);
+    Gym *eliteFour = new Gym(8);
     gyms[0] = pewterGym;
-    // gyms[1] = ceruleanGym;
-    // gyms[2] = vermilionGym;
-    // gyms[3] = celadonGym;
-    // gyms[4] = fuchsiaGym;
-    // gyms[5] = saffronGym;
-    // gyms[6] = cinnabarGym;
-    // gyms[7] = viridianGym;
-    // gyms[8] = eliteFour;
+    gyms[1] = ceruleanGym;
+    gyms[2] = vermilionGym;
+    gyms[3] = celadonGym;
+    gyms[4] = fuchsiaGym;
+    gyms[5] = saffronGym;
+    gyms[6] = cinnabarGym;
+    gyms[7] = viridianGym;
+    gyms[8] = eliteFour;
 
-    mvprintw(24, 0, "(%d, %d)", (200 - gyms[0]->w_row), (gyms[0]->w_col - 200));
+    // mvprintw(24, 0, "(%d, %d)", (200 - gyms[0]->w_row), (gyms[0]->w_col - 200));
 
     // mvprintw(24, 0, "(%d, %d)", gyms[0]->w_row, gyms[0]->w_col);
 
-    // for (int i = 0; i < 9; i++)
-    // {
-    //     mvprintw(24 + i, 0, "(%d, %d)", gyms[i]->w_row, gyms[i]->w_col);
-    // }
+    for (int i = 0; i < 9; i++)
+    {
+        mvprintw(24 + i, 0, "(%d, %d)", (200 - gyms[i]->w_row), (gyms[i]->w_col - 200));
+    }
 
     WM.mapGrid[200][200] = generateNewMap(&WM, 200, 200);
 
@@ -5257,49 +5306,49 @@ int main(int argc, char *argv[])
                 mvprintw(0, 0, "entering Pewter Gym");
                 enterBuilding(curMap, &player, TT_PEWTER);
             }
-            else if (curMap->Tgrid[player.row][player.col] == TT_CERULEAN)
+            else if (curMap->Tgrid[player.row][player.col] == TT_CERULEAN && player.numBadges >= 1)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Cerulean Gym");
                 enterBuilding(curMap, &player, TT_CERULEAN);
             }
-            else if (curMap->Tgrid[player.row][player.col] == TT_VERMILION)
+            else if (curMap->Tgrid[player.row][player.col] == TT_VERMILION && player.numBadges >= 2)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Vermilion Gym");
                 enterBuilding(curMap, &player, TT_VERMILION);
             }
-            else if (curMap->Tgrid[player.row][player.col] == TT_CELADON)
+            else if (curMap->Tgrid[player.row][player.col] == TT_CELADON && player.numBadges >= 3)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Celadon Gym");
                 enterBuilding(curMap, &player, TT_CELADON);
             }
-            else if (curMap->Tgrid[player.row][player.col] == TT_FUSHSIA)
+            else if (curMap->Tgrid[player.row][player.col] == TT_FUSHSIA && player.numBadges >= 4)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Fushia Gym");
                 enterBuilding(curMap, &player, TT_FUSHSIA);
             }
-            else if (curMap->Tgrid[player.row][player.col] == TT_SAFFRON)
+            else if (curMap->Tgrid[player.row][player.col] == TT_SAFFRON && player.numBadges >= 5)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Saffron Gym");
                 enterBuilding(curMap, &player, TT_SAFFRON);
             }
-            else if (curMap->Tgrid[player.row][player.col] == TT_CINNABAR)
+            else if (curMap->Tgrid[player.row][player.col] == TT_CINNABAR && player.numBadges >= 6)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Cinnabar Gym");
                 enterBuilding(curMap, &player, TT_CINNABAR);
             }
-            else if (curMap->Tgrid[player.row][player.col] == TT_VIRIDIAN)
+            else if (curMap->Tgrid[player.row][player.col] == TT_VIRIDIAN && player.numBadges >= 7)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Viridian Gym");
                 enterBuilding(curMap, &player, TT_VIRIDIAN);
             }
-            else if (curMap->Tgrid[player.row][player.col] == TT_ELITEFOUR)
+            else if (curMap->Tgrid[player.row][player.col] == TT_ELITEFOUR && player.numBadges >= 8)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Elite Four Gym");
@@ -5308,7 +5357,7 @@ int main(int argc, char *argv[])
             else
             {
                 clearScreen_top();
-                mvprintw(0, 0, "no building to enter");
+                mvprintw(0, 0, "Cannot enter building, get more badges you noob.");
             }
             break;
         case '5':
