@@ -433,6 +433,13 @@ public:
     Gym(int gym)
     {
         leaderSet = false;
+        for (int i = 0; i < 21; i++)
+        {
+            for (int j = 0; j < 40; j++)
+            {
+                charGrid[i][j] = NULL;
+            }
+        }
 
         switch (gym)
         {
@@ -472,8 +479,8 @@ public:
                 }
             }
             badge = "Boulder Badge";
-            NPC *brock;
-            leaders.push_back(*brock);
+            // NPC *brock;
+            // leaders.push_back(*brock);
             // NPC *brock = new NPC(CT_LEADER, 6, "Brock", w_row, w_col);
             // charGrid[brock->row][brock->col] = brock;
             // leaders.push_back(*brock);
@@ -825,7 +832,7 @@ public:
         // clear the screen
         clear();
 
-        mvprintw(23, 0, "Goes in");
+        mvprintw(30, 0, "Goes in");
         for (int i = 0; i < 21; i++)
         {
             for (int j = 0; j < 40; j++)
@@ -859,25 +866,6 @@ public:
                     int curTerrain = Ggrid[i][j];
                     switch (curTerrain)
                     {
-                    // case TT_HOUSE:
-                    //     attron(COLOR_PAIR(COLOR_WHITE));
-                    //     // attron(A_BOLD);
-                    //     // attron(A_BLINK);
-                    //     mvprintw(i + 1, j, "H");
-                    //     // attroff(A_BLINK);
-                    //     // attroff(A_BOLD);
-                    //     attroff(COLOR_PAIR(COLOR_WHITE));
-                    //     break;
-                    case TT_PCENTER:
-                        attron(COLOR_PAIR(COLOR_MAGENTA));
-                        mvprintw(i + 1, j, "C");
-                        attroff(COLOR_PAIR(COLOR_MAGENTA));
-                        break;
-                    case TT_PMART:
-                        attron(COLOR_PAIR(COLOR_MAGENTA));
-                        mvprintw(i + 1, j, "P");
-                        attroff(COLOR_PAIR(COLOR_MAGENTA));
-                        break;
                     case TT_SGRASS:
                         attron(COLOR_PAIR(COLOR_GREEN));
                         mvprintw(i + 1, j, ".");
@@ -925,6 +913,8 @@ public:
         refresh();
         return 0;
     };
+
+    // int playGym(PC)
 };
 
 class Map
@@ -3223,7 +3213,25 @@ public:
                                 }
                             }
 
-                            m->charGrid[opponent->row][opponent->col] = NULL;
+
+
+
+
+
+
+
+
+
+
+
+
+                            // m->charGrid[opponent->row][opponent->col] = NULL;
+
+// REMOVED FOR TESTING
+
+
+
+
                             return 0;
                         }
                         else // Trainer has more available pokemon to fight
@@ -4816,7 +4824,271 @@ int displayTrainerList(WorldMap *WM, Map *m, PC *player)
     return 0;
 }
 
-int enterBuilding(Map *m, PC *player, int buildingType)
+int playGym(Gym *gym, PC *player, WorldMap *WM, Map *m)
+{
+    // gym->printGym();
+    GQdequeueAll(&(WM->charQueue));
+    // int tmpRow = player->row;
+    // int tmpCol = player->col;
+
+    m->charGrid[player->row][player->col] = NULL;
+    player->updateCoords(10, 10);
+    player->updateNextCoords(10, 10);
+    gym->charGrid[10][10] = player;
+    for (NPC leader : gym->leaders)
+    {
+        GQenqueue(&(WM->charQueue), leader.row, leader.col, leader.nextCost, &leader);
+    }
+    GQenqueue(&(WM->charQueue), player->row, player->col, 0, player);
+    // enqueueAllChars(&(WM->charQueue), );
+    mvprintw(29, 0, "Size of the queue: %d", WM->charQueue.length);
+    // for (int i = 0; i < WM->charQueue.length; i++)
+    // {
+        // mvprintw(30 + i, 0, "Character %s", wm->);
+    // }
+    gym->printGym();
+
+    bool left = false;
+    int key;
+    int skipLastTurn;
+
+    while (!left)
+    // curMap = WM.mapGrid[w_row][w_col];
+        key = getch();
+        skipLastTurn = 0;
+        int usrKey, usrNum, status;
+        switch (key)
+        {
+        case 'B':
+        {
+            createPanel(12, 20, 10, 69);
+            mvprintw(13, 13, "Choose an item from your bag: ");
+
+            for (int i = 0; i < (int)player->bag.size(); i++)
+            {
+                attron(COLOR_PAIR(COLOR_YELLOW));
+                attron(A_BLINK);
+                mvprintw(15 + i, 13, "%d. %s : %d", i + 1, player->bag[i].name.c_str(), player->bag[i].quantity);
+                attroff(COLOR_PAIR(COLOR_YELLOW));
+                attroff(A_BLINK);
+            }
+
+            while (1)
+            {
+                usrKey = getch();
+                usrNum = usrKey - 48;
+                switch (usrNum)
+                {
+                case 1:
+                {
+                    mvprintw(13, 13, "*                                                          *");
+                    mvprintw(13, 13, "You can't use a pokeball!! Press space to continue.");
+                    while (1)
+                    {
+                        usrKey = getch();
+                        if (usrKey == ' ')
+                        {
+                            break;
+                        }
+                    }
+                    break;
+                }
+
+                case 2:
+                {
+                    status = choosePokemon(player->party, 1);
+                    if (status == -1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        player->usePotion(&player->party[status]);
+                    }
+                    break;
+                }
+
+                case 3:
+                {
+                    status = choosePokemon(player->party, 2);
+                    if (status == -1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        player->useRevive(&player->party[status]);
+                    }
+
+                    break;
+                }
+                }
+                break;
+            }
+            break;
+        }
+
+        case '7':
+        case 'y':
+            // attempt to move PC one cell to the upper left (should check for capability in the move characters function)
+            if (calc_Cost(gym->Ggrid[player->row - 1][player->col - 1], CT_PLAYER) != MAX)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "move up left");
+                player->updateNextCoords(player->row - 1, player->col - 1);
+            }
+            else
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "can't move up left");
+            }
+            break;
+        case '8':
+        case 'k':
+            // attempt to move PC one cell up (should check for capability in the move characters function)
+            if (calc_Cost(gym->Ggrid[player->row - 1][player->col], CT_PLAYER) != MAX)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "move up");
+                player->updateNextCoords(player->row - 1, player->col);
+            }
+            else
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "can't move up");
+            }
+            break;
+        case '9':
+        case 'u':
+            // attempt to move PC one cell to the upper right (should check for capability in the move characters function)
+            if (calc_Cost(gym->Ggrid[player->row - 1][player->col + 1], CT_PLAYER) != MAX)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "move up right");
+                player->updateNextCoords(player->row - 1, player->col + 1);
+            }
+            else
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "can't move up right");
+            }
+            break;
+        case '6':
+        case 'l':
+            // attempt to move PC one cell to the right (should check for capability in the move characters function)
+            if (calc_Cost(gym->Ggrid[player->row][player->col + 1], CT_PLAYER) != MAX)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "move right");
+                player->updateNextCoords(player->row, player->col + 1);
+            }
+            else
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "can't move right");
+            }
+            break;
+        case '3':
+        case 'n':
+            // attempt to move PC one cell to the lower right (should check for capability in the move characters function)
+            if (calc_Cost(gym->Ggrid[player->row + 1][player->col + 1], CT_PLAYER) != MAX)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "move down right");
+                player->updateNextCoords(player->row + 1, player->col + 1);
+            }
+            else
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "can't move down right");
+            }
+            break;
+        case '2':
+        case 'j':
+            // attempt to move PC one cell down (should check for capability in the move characters function)
+            if (calc_Cost(gym->Ggrid[player->row + 1][player->col], CT_PLAYER) != MAX)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "move down");
+                player->updateNextCoords(player->row + 1, player->col);
+            }
+            else
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "can't move down");
+            }
+            break;
+        case '1':
+        case 'b':
+            // attempt to move PC one cell to the lower left
+            if (calc_Cost(gym->Ggrid[player->row + 1][player->col - 1], CT_PLAYER) != MAX)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "move down left");
+                player->updateNextCoords(player->row + 1, player->col - 1);
+            }
+            else
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "can't move down left");
+            }
+            break;
+        case '4':
+        case 'h':
+            // attempt to move PC one cell to the left
+            if (calc_Cost(gym->Ggrid[player->row][player->col - 1], CT_PLAYER) != MAX)
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "move left");
+                player->updateNextCoords(player->row, player->col - 1);
+            }
+            else
+            {
+                clearScreen_top();
+                mvprintw(0, 0, "can't move left");
+            }
+            break;
+        case '5':
+        case ' ':
+        case '.':
+            // rest for a turn. NPCs still move
+            clearScreen_top();
+            mvprintw(0, 0, "rest");
+            break;
+        default:
+            // print out key that was pressed
+            clearScreen_top();
+            mvprintw(0, 0, "Unknown Key: %d", key);
+            skipLastTurn = 1;
+        }
+
+        // Dealing with PC movement
+        if (gym->charGrid[player->nextRow][player->nextCol] != NULL && gym->charGrid[player->nextRow][player->nextCol]->type != CT_PLAYER && dynamic_cast<NPC *>(gym->charGrid[player->nextRow][player->nextCol])->isDefeated == 0)
+        { // I CAN DYNAMIC CAST THE CHARACTER HERE BECUASE EARLIER IN THE CONDITIONAL I CHECKED IF IT WAS THE PC
+            player->battle(curMap, dynamic_cast<NPC *>(curMap->charGrid[player.nextRow][player.nextCol]));
+        }
+        // only move if there is no LIVE character already in the spot you want to go to
+        else
+        {
+            // remove the character from the charMap and update node's coords
+            curMap->charGrid[player.row][player.col] = NULL;
+            player.updateCoords(player.nextRow, player.nextCol);
+        }
+
+        GQenqueue(&(WM->charQueue), player->row, player->col, retVal + player.nextCost, &player); // the character is enqueued with a value of its old value PLUS the new cost to move to the new terrain
+        gym->charGrid[player->row][player->col] = &player;
+        gym->printGym();
+
+    // int usrKey;
+    // do
+    // {
+    //     usrKey = getch();
+    // } while (usrKey != KEY_LEFT);
+
+    return 0;
+}
+
+int enterBuilding(WorldMap *WM, Map *m, PC *player, int buildingType)
 {
     int usrKey;
     clearScreen_top();
@@ -4858,88 +5130,142 @@ int enterBuilding(Map *m, PC *player, int buildingType)
     {
         // createPanel(3, 43, 10, 69);
         // bool matchDone = false;
+        mvprintw(25, 0, "Attempts to enter the gym");
+        // Gym *curGym;
         if (buildingType == TT_PEWTER)
         {
-            // if (gyms[0]->leaderSet == false)
-            // {
-                // leaders[0] = new NPC(CT_LEADER, 6, "Brock", w_row, w_col);
-            // }
-            // gyms[0]->charGrid[brock->row][brock->col] = brock;
-            // gyms[0]->leaders.push_back(*brock);
-
-            gyms[0]->printGym();
-            // mvprintw(4, 15, "welcome to the Pewter Gym! press '<' to leave");
-            // for (int i = 0; i < (int)player->party.size(); i++)
-            // {
-            //     player->party[i].HP = player->party[i].max_HP;
-            // }
-            do
+            if (gyms[0]->leaderSet == false)
             {
-                usrKey = getch();
-            } while (usrKey != KEY_LEFT);
+                NPC *brock = new NPC(CT_LEADER, 6, "Brock", w_row, w_col);
+                gyms[0]->charGrid[brock->row][brock->col] = brock;
+                gyms[0]->leaders.push_back(*brock);
+                gyms[0]->leaderSet = true;
+            }
+
+            playGym(gyms[0], player, WM, m);
+
+            // curGym = gyms[0];
+            mvprintw(26, 0, "Has created the leader and has placed it in the charGrid");
         }
+        /*
         else if (buildingType == TT_CERULEAN)
         {
             // mvprintw(4, 15, "welcome to the Cerulean Gym! press '<' to leave");
-            NPC *misty = new NPC(CT_LEADER, 11, "Misty", w_row, w_col);
-            gyms[1]->charGrid[misty->row][misty->col] = misty;
-            gyms[1]->leaders.push_back(*misty);
+            if (gyms[1]->leaderSet == false)
+            {
+                NPC *misty = new NPC(CT_LEADER, 11, "Misty", w_row, w_col);
+                gyms[1]->charGrid[misty->row][misty->col] = misty;
+                gyms[1]->leaders.push_back(*misty);
+                gyms[1]->leaderSet = true;
+            }
+
+            curGym = gyms[1];
         }
         else if (buildingType == TT_VERMILION)
         {
             // mvprintw(4, 15, "welcome to the Vermilion Gym! press '<' to leave");
-            NPC *lt_Surge = new NPC(CT_LEADER, 13, "Lt. Surge", w_row, w_col);
-            gyms[2]->charGrid[lt_Surge->row][lt_Surge->col] = lt_Surge;
-            gyms[2]->leaders.push_back(*lt_Surge);
+            if (gyms[2]->leaderSet == false)
+            {
+                NPC *lt_Surge = new NPC(CT_LEADER, 13, "Lt. Surge", w_row, w_col);
+                gyms[2]->charGrid[lt_Surge->row][lt_Surge->col] = lt_Surge;
+                gyms[2]->leaders.push_back(*lt_Surge);
+                gyms[2]->leaderSet = true;
+            }
+
+            curGym = gyms[2];
         }
         else if (buildingType == TT_CELADON)
         {
-            NPC *erika = new NPC(CT_LEADER, 12, "Erika", w_row, w_col);
-            gyms[3]->charGrid[erika->row][erika->col] = erika;
-            gyms[3]->leaders.push_back(*erika);
+            if (gyms[3]->leaderSet == false)
+            {
+                NPC *erika = new NPC(CT_LEADER, 12, "Erika", w_row, w_col);
+                gyms[3]->charGrid[erika->row][erika->col] = erika;
+                gyms[3]->leaders.push_back(*erika);
+                gyms[3]->leaderSet = true;
+            }
+
+            curGym = gyms[3];
         }
         else if (buildingType == TT_FUSHSIA)
         {
-            NPC *koga = new NPC(CT_LEADER, 4, "Koga", w_row, w_col);
-            gyms[4]->charGrid[koga->row][koga->col] = koga;
-            gyms[4]->leaders.push_back(*koga);
-            NPC *janine = new NPC(CT_LEADER, 4, "Janine", w_row, w_col);
-            gyms[4]->charGrid[janine->row][janine->col] = janine;
-            gyms[4]->leaders.push_back(*janine);
+            if (gyms[4]->leaderSet == false)
+            {
+                NPC *koga = new NPC(CT_LEADER, 4, "Koga", w_row, w_col);
+                gyms[4]->charGrid[koga->row][koga->col] = koga;
+                gyms[4]->leaders.push_back(*koga);
+                NPC *janine = new NPC(CT_LEADER, 4, "Janine", w_row, w_col);
+                gyms[4]->charGrid[janine->row][janine->col] = janine;
+                gyms[4]->leaders.push_back(*janine);
+                gyms[4]->leaderSet = true;
+            }
+
+            curGym = gyms[4];
         }
         else if (buildingType == TT_SAFFRON)
         {
-            NPC *sabrina = new NPC(CT_LEADER, 14, "Sabrina", w_row, w_col);
-            gyms[5]->charGrid[sabrina->row][sabrina->col] = sabrina;
-            gyms[5]->leaders.push_back(*sabrina);
+            if (gyms[5]->leaderSet == false)
+            {
+                NPC *sabrina = new NPC(CT_LEADER, 14, "Sabrina", w_row, w_col);
+                gyms[5]->charGrid[sabrina->row][sabrina->col] = sabrina;
+                gyms[5]->leaders.push_back(*sabrina);
+                gyms[5]->leaderSet = true;
+            }
+
+            curGym = gyms[5];
         }
         else if (buildingType == TT_CINNABAR)
         {
-            NPC *blane = new NPC(CT_LEADER, 10, "blane", w_row, w_col);
-            gyms[6]->charGrid[blane->row][blane->col] = blane;
-            gyms[6]->leaders.push_back(*blane);
+            if (gyms[6]->leaderSet == false)
+            {
+                NPC *blane = new NPC(CT_LEADER, 10, "blane", w_row, w_col);
+                gyms[6]->charGrid[blane->row][blane->col] = blane;
+                gyms[6]->leaders.push_back(*blane);
+                gyms[6]->leaderSet = true;
+            }
+
+            curGym = gyms[6];
         }
         else if (buildingType == TT_VIRIDIAN)
         {
-            NPC *giovanni = new NPC(CT_LEADER, 5, "Giovanni", w_row, w_col);
-            gyms[7]->charGrid[giovanni->row][giovanni->col] = giovanni;
-            gyms[7]->leaders.push_back(*giovanni);
-            NPC *blue = new NPC(CT_LEADER, rand() % 19, "Blue", w_row, w_col);
-            gyms[7]->charGrid[blue->row][blue->col] = blue;
-            gyms[7]->leaders.push_back(*blue);
+            if (gyms[7]->leaderSet == false)
+            {
+                NPC *giovanni = new NPC(CT_LEADER, 5, "Giovanni", w_row, w_col);
+                gyms[7]->charGrid[giovanni->row][giovanni->col] = giovanni;
+                gyms[7]->leaders.push_back(*giovanni);
+                NPC *blue = new NPC(CT_LEADER, rand() % 19, "Blue", w_row, w_col);
+                gyms[7]->charGrid[blue->row][blue->col] = blue;
+                gyms[7]->leaders.push_back(*blue);
+                gyms[7]->leaderSet = true;
+            }
+
+            curGym = gyms[7];
         }
         else if (buildingType == TT_ELITEFOUR)
         {
-            NPC *lorelai = new NPC(CT_LEADER, 15, "Lorelai", w_row, w_col);
-            gyms[8]->charGrid[lorelai->row][lorelai->col] = lorelai;
-            gyms[8]->leaders.push_back(*lorelai);
-            NPC *bruno = new NPC(CT_LEADER, 2, "Bruno", w_row, w_col);
-            gyms[8]->charGrid[bruno->row][bruno->col] = bruno;
-            gyms[8]->leaders.push_back(*bruno);
-            NPC *agatha = new NPC(CT_LEADER, 8, "Agatha", w_row, w_col);
-            gyms[8]->charGrid[agatha->row][agatha->col] = agatha;
-            gyms[8]->leaders.push_back(*agatha);
+            if (gyms[8]->leaderSet == false)
+            {
+                NPC *lorelai = new NPC(CT_LEADER, 15, "Lorelai", w_row, w_col);
+                gyms[8]->charGrid[lorelai->row][lorelai->col] = lorelai;
+                gyms[8]->leaders.push_back(*lorelai);
+                NPC *bruno = new NPC(CT_LEADER, 2, "Bruno", w_row, w_col);
+                gyms[8]->charGrid[bruno->row][bruno->col] = bruno;
+                gyms[8]->leaders.push_back(*bruno);
+                NPC *agatha = new NPC(CT_LEADER, 8, "Agatha", w_row, w_col);
+                gyms[8]->charGrid[agatha->row][agatha->col] = agatha;
+                gyms[8]->leaders.push_back(*agatha);
+                gyms[8]->leaderSet = true;
+            }
+
+            curGym = gyms[8];
         }
+        */
+
+        // mvprintw(27, 0, "Attempts to print gym");
+        // curGym->printGym();
+        do
+        {
+            usrKey = getch();
+        } while (usrKey != KEY_LEFT);
     }
 
     else
@@ -5292,67 +5618,67 @@ int main(int argc, char *argv[])
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering pokemart");
-                enterBuilding(curMap, &player, TT_PMART);
+                enterBuilding(&WM, curMap, &player, TT_PMART);
             }
             else if (curMap->Tgrid[player.row][player.col] == TT_PCENTER)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering pokecenter");
-                enterBuilding(curMap, &player, TT_PCENTER);
+                enterBuilding(&WM, curMap, &player, TT_PCENTER);
             }
             else if (curMap->Tgrid[player.row][player.col] == TT_PEWTER)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Pewter Gym");
-                enterBuilding(curMap, &player, TT_PEWTER);
+                enterBuilding(&WM, curMap, &player, TT_PEWTER);
             }
             else if (curMap->Tgrid[player.row][player.col] == TT_CERULEAN && player.numBadges >= 1)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Cerulean Gym");
-                enterBuilding(curMap, &player, TT_CERULEAN);
+                enterBuilding(&WM, curMap, &player, TT_CERULEAN);
             }
             else if (curMap->Tgrid[player.row][player.col] == TT_VERMILION && player.numBadges >= 2)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Vermilion Gym");
-                enterBuilding(curMap, &player, TT_VERMILION);
+                enterBuilding(&WM, curMap, &player, TT_VERMILION);
             }
             else if (curMap->Tgrid[player.row][player.col] == TT_CELADON && player.numBadges >= 3)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Celadon Gym");
-                enterBuilding(curMap, &player, TT_CELADON);
+                enterBuilding(&WM, curMap, &player, TT_CELADON);
             }
             else if (curMap->Tgrid[player.row][player.col] == TT_FUSHSIA && player.numBadges >= 4)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Fushia Gym");
-                enterBuilding(curMap, &player, TT_FUSHSIA);
+                enterBuilding(&WM, curMap, &player, TT_FUSHSIA);
             }
             else if (curMap->Tgrid[player.row][player.col] == TT_SAFFRON && player.numBadges >= 5)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Saffron Gym");
-                enterBuilding(curMap, &player, TT_SAFFRON);
+                enterBuilding(&WM, curMap, &player, TT_SAFFRON);
             }
             else if (curMap->Tgrid[player.row][player.col] == TT_CINNABAR && player.numBadges >= 6)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Cinnabar Gym");
-                enterBuilding(curMap, &player, TT_CINNABAR);
+                enterBuilding(&WM, curMap, &player, TT_CINNABAR);
             }
             else if (curMap->Tgrid[player.row][player.col] == TT_VIRIDIAN && player.numBadges >= 7)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Viridian Gym");
-                enterBuilding(curMap, &player, TT_VIRIDIAN);
+                enterBuilding(&WM, curMap, &player, TT_VIRIDIAN);
             }
             else if (curMap->Tgrid[player.row][player.col] == TT_ELITEFOUR && player.numBadges >= 8)
             {
                 clearScreen_top();
                 mvprintw(0, 0, "entering Elite Four Gym");
-                enterBuilding(curMap, &player, TT_ELITEFOUR);
+                enterBuilding(&WM, curMap, &player, TT_ELITEFOUR);
             }
             else
             {
