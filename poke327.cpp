@@ -734,7 +734,7 @@ public:
             w_col = randY;
 
             std::ifstream file;
-            file.open("rockGym.txt");
+            file.open("pewterGym.txt");
             std::string curLine;
             for (int i = 0; i < 21; i++)
             {
@@ -788,7 +788,7 @@ public:
             w_col = randY;
 
             std::ifstream file;
-            file.open("rockGym.txt");
+            file.open("pewterGym.txt");
             std::string curLine;
             for (int i = 0; i < 21; i++)
             {
@@ -842,7 +842,7 @@ public:
             w_col = randY;
 
             std::ifstream file;
-            file.open("rockGym.txt");
+            file.open("pewterGym.txt");
             std::string curLine;
             for (int i = 0; i < 21; i++)
             {
@@ -889,15 +889,14 @@ public:
             name = "Final Gym";
             terrainType = 21;
             int randX, randY;
-            if (rand() % 2 == 0 ? randX = 0 : randX = 399)
-                ;
-            if (rand() % 2 == 0 ? randY = 0 : randY = 399)
-                ;
+            if (rand() % 2 == 0 ? randX = 0 : randX = 399);
+            if (randX == 0 ? randY = 399 : randY = 0);
+            // randY = 399
             w_row = randX;
             w_col = randY;
 
             std::ifstream file;
-            file.open("rockGym.txt");
+            file.open("pewterGym.txt");
             std::string curLine;
             for (int i = 0; i < 21; i++)
             {
@@ -950,7 +949,7 @@ public:
         // clear the screen
         clear();
 
-        mvprintw(30, 0, "Goes in");
+        // mvprintw(30, 0, "Goes in");
         for (int i = 0; i < 21; i++)
         {
             for (int j = 0; j < 40; j++)
@@ -1305,76 +1304,6 @@ public:
         int distance = abs(globalRow - 200) + abs(globalCol - 200); // Manhattan distance from center of board
         int randSpawnNum = rand() % 400;                            // generates a random number from 0 to 399
 
-        // if (gyms[0]->w_row == w_row && gyms[0]->w_col == w_col)
-        // {
-        //     // mvprintw(25, 0, "Attenpts to place gym %s", gym[i]->name);
-        //     while (1)
-        //     {
-        //         randRow = rand() % 14 + 3;
-        //         randCol = rand() % 73 + 3;
-        //         int terrain = gyms[0]->terrainType;
-
-        //         // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-right of path)
-        //         if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol + 1] != TT_PATH && Tgrid[randRow][randCol + 2] != TT_PATH && Tgrid[randRow - 1][randCol + 1] != TT_PATH && Tgrid[randRow - 1][randCol + 2] != TT_PATH &&
-        //             Tgrid[randRow][randCol + 1] != TT_BRIDGE && Tgrid[randRow][randCol + 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 2] != TT_BRIDGE)
-        //         {
-        //             Tgrid[randRow][randCol + 1] = terrain;
-        //             Tgrid[randRow][randCol + 2] = terrain;
-        //             Tgrid[randRow - 1][randCol + 1] = terrain;
-        //             Tgrid[randRow - 1][randCol + 2] = terrain;
-        //             break;
-        //         }
-
-        //         // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-left of path)
-        //         if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol - 1] != TT_PATH && Tgrid[randRow][randCol - 2] != TT_PATH && Tgrid[randRow - 1][randCol - 1] != TT_PATH && Tgrid[randRow - 1][randCol - 2] != TT_PATH &&
-        //             Tgrid[randRow][randCol - 1] != TT_BRIDGE && Tgrid[randRow][randCol - 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 2] != TT_BRIDGE)
-        //         {
-
-        //             Tgrid[randRow][randCol - 1] = terrain;
-        //             Tgrid[randRow][randCol - 2] = terrain;
-        //             Tgrid[randRow - 1][randCol - 1] = terrain;
-        //             Tgrid[randRow - 1][randCol - 2] = terrain;
-        //             break;
-        //         }
-        //     }
-        // }
-
-        for (int i = 0; i < 9; i++)
-        {
-            if (gyms[i]->w_row == w_row && gyms[i]->w_col == w_col)
-            {
-                while (1)
-                {
-                    randRow = rand() % 14 + 3;
-                    randCol = rand() % 73 + 3;
-                    int terrain = gyms[i]->terrainType;
-
-                    // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-right of path)
-                    if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol + 1] != TT_PATH && Tgrid[randRow][randCol + 2] != TT_PATH && Tgrid[randRow - 1][randCol + 1] != TT_PATH && Tgrid[randRow - 1][randCol + 2] != TT_PATH &&
-                        Tgrid[randRow][randCol + 1] != TT_BRIDGE && Tgrid[randRow][randCol + 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 2] != TT_BRIDGE)
-                    {
-                        Tgrid[randRow][randCol + 1] = terrain;
-                        Tgrid[randRow][randCol + 2] = terrain;
-                        Tgrid[randRow - 1][randCol + 1] = terrain;
-                        Tgrid[randRow - 1][randCol + 2] = terrain;
-                        break;
-                    }
-
-                    // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-left of path)
-                    if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol - 1] != TT_PATH && Tgrid[randRow][randCol - 2] != TT_PATH && Tgrid[randRow - 1][randCol - 1] != TT_PATH && Tgrid[randRow - 1][randCol - 2] != TT_PATH &&
-                        Tgrid[randRow][randCol - 1] != TT_BRIDGE && Tgrid[randRow][randCol - 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 2] != TT_BRIDGE)
-                    {
-
-                        Tgrid[randRow][randCol - 1] = terrain;
-                        Tgrid[randRow][randCol - 2] = terrain;
-                        Tgrid[randRow - 1][randCol - 1] = terrain;
-                        Tgrid[randRow - 1][randCol - 2] = terrain;
-                        break;
-                    }
-                }
-                break;
-            }
-        }
 
         if (randSpawnNum >= distance)
         {
@@ -1446,6 +1375,44 @@ public:
                 }
             }
         }
+
+                for (int i = 0; i < 9; i++)
+        {
+            if (gyms[i]->w_row == w_row && gyms[i]->w_col == w_col)
+            {
+                while (1)
+                {
+                    randRow = rand() % 14 + 3;
+                    randCol = rand() % 73 + 3;
+                    int terrain = gyms[i]->terrainType;
+
+                    // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-right of path)
+                    if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol + 1] != TT_PATH && Tgrid[randRow][randCol + 2] != TT_PATH && Tgrid[randRow - 1][randCol + 1] != TT_PATH && Tgrid[randRow - 1][randCol + 2] != TT_PATH &&
+                        Tgrid[randRow][randCol + 1] != TT_BRIDGE && Tgrid[randRow][randCol + 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol + 2] != TT_BRIDGE)
+                    {
+                        Tgrid[randRow][randCol + 1] = terrain;
+                        Tgrid[randRow][randCol + 2] = terrain;
+                        Tgrid[randRow - 1][randCol + 1] = terrain;
+                        Tgrid[randRow - 1][randCol + 2] = terrain;
+                        break;
+                    }
+
+                    // check if the pokeMart can be placed without overlapping a road or bridge but still touching a road. (placed up-left of path)
+                    if (Tgrid[randRow][randCol] == TT_PATH && Tgrid[randRow][randCol - 1] != TT_PATH && Tgrid[randRow][randCol - 2] != TT_PATH && Tgrid[randRow - 1][randCol - 1] != TT_PATH && Tgrid[randRow - 1][randCol - 2] != TT_PATH &&
+                        Tgrid[randRow][randCol - 1] != TT_BRIDGE && Tgrid[randRow][randCol - 2] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 1] != TT_BRIDGE && Tgrid[randRow - 1][randCol - 2] != TT_BRIDGE)
+                    {
+
+                        Tgrid[randRow][randCol - 1] = terrain;
+                        Tgrid[randRow][randCol - 2] = terrain;
+                        Tgrid[randRow - 1][randCol - 1] = terrain;
+                        Tgrid[randRow - 1][randCol - 2] = terrain;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
         return 0;
     }
 
@@ -3133,11 +3100,11 @@ public:
         createPanel(3, 20, 10, 69);
         mvprintw(12, 10, "***********************************************************");
         mvprintw(13, 13, "%s wants to battle you! Press space to continue", opponent->name.c_str());
-        mvprintw(23, 0, "isDefeated: %d", opponent->isDefeated);
+        // mvprintw(23, 0, "isDefeated: %d", opponent->isDefeated);
 
         int trainerCurPokemon = 0;
 
-        mvprintw(22, 0, "Opponent party size: %d", (int)opponent->party.size());
+        // mvprintw(22, 0, "Opponent party size: %d", (int)opponent->party.size());
 
         int usrKey;
         while (1)
@@ -3160,10 +3127,10 @@ public:
 
         int curPokemon = -1;
 
-        for (int i = 0; i < (int)party.size(); i++)
-        {
-            mvprintw(23 + i, 15, "%s HP: %d, LVL: %d", party[i].identifier.c_str(), party[i].HP, party[i].level);
-        }
+        // for (int i = 0; i < (int)party.size(); i++)
+        // {
+        //     mvprintw(23 + i, 15, "%s HP: %d, LVL: %d", party[i].identifier.c_str(), party[i].HP, party[i].level);
+        // }
 
         for (int i = 0; i < (int)party.size(); i++) // Determines a pokemon to send out
         {
@@ -3214,6 +3181,84 @@ public:
         int chosen;
         while (1) // Battle sequence
         {
+            for (int i = 0; i < (int)opponent->party.size(); i++)
+            {
+                if (opponent->party[i].HP > 0)
+                {
+                    trainerCurPokemon = i;
+                    break;
+                }
+            }
+
+            if (party[curPokemon].HP <= 0) // If your current pokemon has fainted
+            {
+                mvprintw(13, 10, "*                                                         *");
+                mvprintw(13, 13, "Your %s fainted! Press space to continue.", party[curPokemon].identifier.c_str());
+                while (1)
+                {
+                    usrKey = getch();
+                    if (usrKey == ' ')
+                    {
+                        break;
+                    }
+                }
+
+                chosen = 0;
+                for (int i = 0; i < (int)party.size(); i++) // Checks to see if there are available pokemon to fight in your party
+                {
+                    if (party[i].HP > 0)
+                    {
+                        chosen++;
+                    }
+                }
+                if (chosen > 0)
+                {
+
+                    int status = choosePokemon(party, 0);
+                    if (status == -1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        curPokemon = status;
+                    }
+
+                    createPanel(12, 20, 10, 69);
+
+                    mvprintw(13, 13, "Go.. %s! Press space to continue", party[curPokemon].identifier.c_str());
+
+                    usrKey = 0;
+                    while (1)
+                    {
+                        usrKey = getch();
+                        if (usrKey == ' ')
+                        {
+                            break;
+                        }
+                    }
+
+                    mvprintw(9, 10, "*                                                          *");
+                    mvprintw(9, 40, "%s       ", party[curPokemon].identifier.c_str());
+                    mvprintw(10, 40, "HP: %d    ", party[curPokemon].HP);
+                    mvprintw(11, 40, "Level: %d    ", party[curPokemon].level);
+                }
+                else // If all of your pokemon are unavailable to fight
+                {
+                    mvprintw(13, 10, "*                                                         *");
+                    mvprintw(13, 13, "You have no more pokemon to switch to!");
+                    while (1)
+                    {
+                        usrKey = getch();
+                        if (usrKey == ' ')
+                        {
+                            break;
+                        }
+                    }
+                    return 0;
+                }
+            }
+
             createPanel(12, 20, 10, 69);
             mvprintw(15, 13, "1. Fight");
             mvprintw(17, 13, "2. Bag");
@@ -3688,6 +3733,104 @@ public:
         int chosen;
         while (1)
         {
+
+            if (wildPokemon->HP <= 0)
+            {
+                // over = true;
+                mvprintw(13, 10, "*                                                         *");
+                mvprintw(13, 13, "You defeated the wild %s! Press space to continue.", wildPokemon->identifier.c_str());
+                while (1)
+                {
+                    usrKey = getch();
+                    if (usrKey == ' ')
+                    {
+                        break;
+                    }
+                }
+                int exp = party[curPokemon].gainExp(*wildPokemon, true);
+                mvprintw(13, 10, "*                                                         *");
+                mvprintw(13, 13, "%s has gained %d exp!", party[curPokemon].identifier.c_str(), exp);
+                while (1)
+                {
+                    usrKey = getch();
+                    if (usrKey == ' ')
+                    {
+                        break;
+                    }
+                }
+
+                delete wildPokemon;
+                return 0;
+            }
+            else if (party[curPokemon].HP <= 0)
+            {
+                mvprintw(13, 10, "*                                                         *");
+                mvprintw(13, 13, "Your %s fainted! Press space to continue.", party[curPokemon].identifier.c_str());
+                while (1)
+                {
+                    usrKey = getch();
+                    if (usrKey == ' ')
+                    {
+                        break;
+                    }
+                }
+
+                chosen = 0;
+                for (int i = 0; i < (int)party.size(); i++)
+                {
+                    if (party[i].HP > 0)
+                    {
+                        chosen++;
+                    }
+                }
+                if (chosen > 0)
+                {
+
+                    int status = choosePokemon(party, 0);
+                    if (status == -1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        curPokemon = status;
+                    }
+
+                    createPanel(12, 20, 10, 69);
+
+                    mvprintw(13, 13, "Go.. %s! Press space to continue", party[curPokemon].identifier.c_str());
+
+                    usrKey = 0;
+                    while (1)
+                    {
+                        usrKey = getch();
+                        if (usrKey == ' ')
+                        {
+                            break;
+                        }
+                    }
+
+                    mvprintw(9, 10, "*                                                          *");
+                    mvprintw(9, 40, "%s       ", party[curPokemon].identifier.c_str());
+                    mvprintw(10, 40, "HP: %d    ", party[curPokemon].HP);
+                    mvprintw(11, 40, "Level: %d    ", party[curPokemon].level);
+                }
+                else
+                {
+                    mvprintw(13, 10, "*                                                         *");
+                    mvprintw(13, 13, "You have no more pokemon to switch to!");
+                    while (1)
+                    {
+                        usrKey = getch();
+                        if (usrKey == ' ')
+                        {
+                            break;
+                        }
+                    }
+                    return 0;
+                }
+            }
+
             createPanel(12, 20, 10, 69);
             mvprintw(15, 13, "1. Fight");
             mvprintw(17, 13, "2. Bag");
@@ -4963,7 +5106,7 @@ int playGym(Gym *gym, PC *player, WorldMap *WM, Map *m)
     }
     GQenqueue(&(WM->charQueue), player->row, player->col, 0, player);
     // enqueueAllChars(&(WM->charQueue), );
-    mvprintw(29, 0, "Size of the queue: %d", WM->charQueue.length);
+    // mvprintw(29, 0, "Size of the queue: %d", WM->charQueue.length);
     // for (int i = 0; i < WM->charQueue.length; i++)
     // {
     // mvprintw(30 + i, 0, "Character %s", wm->);
@@ -5619,7 +5762,7 @@ int main(int argc, char *argv[])
             mvprintw(4, 35, "Gym List");
             for (int i = 0; i < 9; i++)
             {
-                mvprintw(6 + i, 12, "%s: (%d, %d)", gyms[i]->name.c_str(),(200 - gyms[i]->w_row), (gyms[i]->w_col - 200));
+                mvprintw(6 + i, 12, "%s: (%d, %d)", gyms[i]->name.c_str(), (200 - gyms[i]->w_row), (gyms[i]->w_col - 200));
             }
             while (1)
             {

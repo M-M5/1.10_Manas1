@@ -13,3 +13,12 @@ its definitely more work than I want to do
 4/18/23 - Finished NPC trainer battles. I've noticed a slight bug that when you click space during the main interface it will automatically battle pokemon, looking for a fix now.
 
 4/21/23 - I've begun to add some houses, maybe I should make interiors? The idea is to have little towns here and there with gyms
+4/22/23 - Removed the houses as they are unnecessary
+4/23/23 - Took the formula for gaining xp from the pokemon wiki, dumbed it down and added it as a function. For some reason lvl 99s go back to a low level after gaining xp
+4/24/23 - The issue with lvl 99s is that the values would overflow and reset, I added an if statement for the function to not work if the pokemon if lvl 99
+Worked on creating gyms, although I'm having weird issues with my prototypes for gyms as they are not working they way intended
+4/28/23 - Figured out a fix, although it's not what I like. I just have the gyms finish creating their leaders and such later in the code when I enter a building for the first time.
+4/30/23 - I've set up the gyms such that you can now enter and battle the different leaders, and obtain badges.
+There is a small bug where some gyms don't spawn, specifically pewter gym. 
+4/31/23 - Fixed the issues with the gyms, i believe that occasionally either a pokecenter or pokemart spawn over them. the elite 4 gym would also occasionally spawn at 0, 0. i fixed that issue was well, it was due to random chance.
+
